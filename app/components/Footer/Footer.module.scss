@@ -1,0 +1,36 @@
+.footer {
+  position: relative;
+  padding: 40px;
+  background: #111;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  min-width: 350px;
+
+  &__links {
+    display: flex;
+    gap: 20px;
+
+    a {
+      color: #aaa;
+      transition: 0.2s;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    @media (max-width: 595px) {
+      margin-top: 30px;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 850px) {
+    width: 100vw;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

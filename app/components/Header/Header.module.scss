@@ -1,0 +1,244 @@
+.header {
+  width: 100%;
+
+  padding: 0 auto;
+
+  background-color: #ffffff;
+
+
+  &__wrapper {
+    margin: 0 auto;
+    font-size: 500px;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-wrap: nowrap;
+
+
+    @media (max-width: 670px) {
+      flex-direction: column;
+      font-size: 40px;
+      // margin-bottom: 20px;
+    }
+
+    // @media (max-width: 1000px) {
+    //   height: 150px;
+    //   flex-direction: column;
+    // }
+  }
+
+
+
+  &__nav_menu {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 auto;
+    align-items: center;
+    // justify-content: space-between;
+    width: 100%;
+
+
+    @media (max-width: 670px) {
+      // height: 150px;  
+      max-height: 500px;
+      flex-direction: column;
+      background-color: #ffffff;
+    }
+  }
+
+  &__logo {
+    font-size: 30px;
+    font-weight: 800;
+    color: #e31e24;
+    position: relative;
+
+    top: -3px;
+
+    @media (max-width: 670px) {
+      width: 100vw;
+      height: 100%;
+      position: relative;
+      right: 15px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 30px;
+    width: 100%;
+    justify-content: space-evenly;
+    margin: 0 20px;
+
+    &_link {
+      margin-top: 10px;
+      font-size: 16px;
+      text-decoration: none;
+      color: #222;
+      transition: 0.2s;
+
+      @media (max-width: 670px) {
+
+        font-size: 25px;
+        margin: 10px;
+        font-weight: 700;
+      }
+
+      &:hover {
+        color: #e31e24;
+      }
+    }
+
+
+    &_button {
+      display: block;
+      // width: 100%;
+
+      background: #e53535;
+      border-radius: 20px;
+      color: white;
+      padding: 5px 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s ease;
+      font-size: 15px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @media (max-width: 670px) {
+
+        font-size: 25px;
+        padding: 10px 20px;
+        font-weight: 700;
+      }
+
+      &:hover {
+        background-color: #c62e2e;
+        transform: scale(1.01);
+
+      }
+
+      // @media (max-width: 480px) {
+      //   font-size: 18px;
+      // }
+
+      // @media (max-width: 320px) {
+      //   font-size: 13px;
+      // }
+    }
+
+    &_button_content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // font-size: 25px;
+    }
+
+    @media (max-width: 670px) {
+      flex-direction: column;
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+  }
+
+
+}
+
+.loginWrapper {
+  // position: relative;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+.loginWrapper .header__nav_button {
+  line-height: 1.1;
+  padding: 3px 15px;
+  font-size: 15px;
+  position: absolute;
+  bottom: -35px;
+  right: 0;
+  background-color: white;
+  color: #e53535;
+  border-radius: 0 0 15px 15px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+
+  height: 30px;
+
+  @media (max-width: 670px) {
+    bottom: -30px;
+    // right: unset;
+    // left: 0
+  }
+}
+
+
+.defaultText {
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+
+.hoverLinks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: white;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 4px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+
+.header__nav_button:hover .defaultText {
+  opacity: 0;
+}
+
+.header__nav_button:hover .hoverLinks {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hoverLinks a {
+  color: #e53535;
+  text-decoration: none;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hoverLinks button {
+  color: #e53535;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent
+}
+
+.hoverLinks a:hover {
+  text-decoration: underline;
+}
+
+.hoverLinks button:hover {
+  text-decoration: underline;
+}
