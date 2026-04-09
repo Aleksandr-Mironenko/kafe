@@ -1,6 +1,7 @@
 import styles from './styles/pageStyles.module.scss'
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import AdminPage from './admin/page';
 
 export default function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -79,7 +80,7 @@ export default function Home() {
         </h1>
 
 
-
+        <AdminPage />
         <section  >
           <h2 className={styles.visuallyHidden}>
             Логистическая компания Kantar Logistic — международные перевозки
@@ -94,3 +95,16 @@ export default function Home() {
     </>
   );
 }
+
+
+
+
+//  async function translate(text, from = "en", to = "ru") {
+//   const res = await fetch("https://api.mymemory.translated.net/get?q=" 
+//       + encodeURIComponent(text) + `&langpair=${from}|${to}`);
+
+//   const data = await res.json();
+//   return data.responseData.translatedText;
+// }
+
+// translate("Hello world").then(console.log);
