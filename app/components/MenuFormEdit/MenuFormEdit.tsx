@@ -17,14 +17,7 @@ const schema = yup.object({
   name: yup.string().required('Название меню обязательно'),
   description: yup.string().required('Описание обязательно'),
   is_available: yup.boolean().default(false),
-  imageFile: yup
-    .mixed<FileList>()
-    .notRequired()
-    .test('fileType', 'Допустимые форматы: svg, png, jpeg, jpg', (value) => {
-      if (!value || value.length === 0) return true
-      const allowed = ['image/png', 'image/jpeg', 'image/svg+xml']
-      return allowed.includes(value[0].type)
-    })
+
 }).required()
 
 interface Props {

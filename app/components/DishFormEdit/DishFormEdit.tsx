@@ -11,40 +11,29 @@ import { useRouter } from 'next/navigation'
 // 1. СХЕМА
 // -------------------------
 const schema = yup.object({
-  name: yup.string().required('Название обязательно'),
-
-  price: yup
-    .number()
-    .typeError('Введите число')
-    .required('Цена обязательна'),
-
-  weight: yup.string().required('Вес обязателен'),
-
-  ingredients: yup.string().required('Ингредиенты обязательны'),
-
-  short_description: yup
-    .string()
-    .required('Краткое описание обязательно'),
-
-  full_description: yup
-    .string()
-    .required('Полное описание обязательно'),
-
+  name: yup.string().required(),
+  price: yup.number().typeError('Введите число').required(),
+  weight: yup.string().required(),
+  ingredients: yup.string().required(),
+  short_description: yup.string().required(),
+  full_description: yup.string().required(),
   is_available: yup.boolean().default(false),
-  imageFile: yup
-    .mixed<FileList>()
-    .notRequired()
-    .test('fileType', 'Допустимые форматы: png, jpeg, svg', (value) => {
-      if (!value || value.length === 0) return true
-      const allowed = ['image/png', 'image/jpeg', 'image/svg+xml']
-      return allowed.includes(value[0].type)
-    }),
+
 })
 
 // -------------------------
 // 2. ТИП (ФИКС imageFile)
 // -------------------------
-type FormValues = Omit<yup.InferType<typeof schema>, 'imageFile'> & {
+type FormValues = {
+  name: string
+  price: number
+  weight: string
+  ingredients: string
+  short_description: string
+  full_description: string
+  is_available: boolean
+
+  // 👇 ВАЖНО
   imageFile?: FileList
 }
 
@@ -86,6 +75,7 @@ export default function DishFormEdit({
       short_description: initialData.short_description ?? '',
       full_description: initialData.full_description ?? '',
       is_available: initialData.is_available ?? false,
+      imageFile: undefined, // 👈 ДОБАВЬ ЭТО
     },
   })
 
@@ -207,3 +197,6 @@ export default function DishFormEdit({
     </form>
   )
 }
+
+
+
