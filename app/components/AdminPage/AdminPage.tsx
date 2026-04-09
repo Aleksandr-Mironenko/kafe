@@ -4,7 +4,7 @@ import Image from 'next/image'
 import pagefood from '../../../public/food-dish-svgrepo-com.svg'
 import Link from 'next/link'
 import styles from './page.module.scss'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 
 import { useState, useEffect } from 'react'
 
@@ -19,7 +19,7 @@ type Menu = {
 
 
 const AdminPage = ({ menu }: { menu: Menu[] }) => {
-  const router = useRouter()
+  // const router = useRouter()
   const [menuState, setMenu] = useState(menu)
   useEffect(() => setMenu(menu)
 
@@ -75,7 +75,8 @@ const AdminPage = ({ menu }: { menu: Menu[] }) => {
 
                   alert('Меню удалено')
                   // обновляем список без перезагрузки
-                  router.refresh()// или лучше обновлять state
+                  // router.refresh()// или лучше обновлять state
+                  setMenu(prev => prev.filter(item => item.id !== menuel.id))
                 } catch (err: unknown) {
                   alert(err instanceof Error ? err.message : 'Ошибка')
                 }
