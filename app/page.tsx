@@ -65,16 +65,14 @@ export default function Home() {
         }}
       />
 
-      <main
+      {/*  <main
         style={{
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
-
-        <Header />
-
+         <Header />
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
           Международные грузоперевозки Kantar Logistic — логистика, доставка грузов, транспортные решения по России, Европе и Азии
         </h1>
@@ -91,7 +89,7 @@ export default function Home() {
         </section>
 
         <Footer />
-      </main >
+      </main > */}
     </>
   );
 }

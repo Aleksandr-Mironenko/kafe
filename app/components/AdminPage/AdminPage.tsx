@@ -19,116 +19,118 @@ type Menu = {
 
 
 const AdminPage = ({ menu }: { menu: Menu[] }) => {
-  const router = useRouter()
-  const [menuState, setMenu] = useState(menu)
-  useEffect(() => setMenu(menu)
+  // const router = useRouter()
+  // const [menuState, setMenu] = useState(menu)
+  // useEffect(() => setMenu(menu)
 
-    , [menu])
-
-
+  //   , [menu])
 
 
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Меню</h1>
-        <Link href={`/admin/create`}
-          className={styles.createButton}>
-          + Создать меню
-        </Link>
-
-      </div>
-
-      <div className={styles.grid}>
-        {(menuState || []).map(menuel => (
-
-          <div key={menuel.id} className="menuCard">
-            <Link href={`/admin/menu/${menuel.id}`}>
-              <Image
-                src={menuel.image_url || pagefood}
-                alt={menuel.name}
-                style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px' }}
-                width={400}
-                height={180}
-              />
-              <p style={{ marginTop: '8px', fontWeight: '600', fontSize: '1rem' }}>{menuel.name}</p>
-
-            </Link>
-            <div className={styles.actionButtons}>
 
 
-              <Link href={`/admin/menu/${menuel.id}/edit`} className={`${styles.actionButton} ${styles.edit}`}>
-                ✏️
-              </Link>
+  return
 
-              <button onClick={async (e) => {
-                e.preventDefault()
-                if (!confirm(`Удалить все меню "${menuel.name}"?`)) return
+  // (
+  // <div className={styles.container}>
+  //   <div className={styles.header}>
+  //     <h1 className={styles.title}>Меню</h1>
+  //     <Link href={`/admin/create`}
+  //       className={styles.createButton}>
+  //       + Создать меню
+  //     </Link>
 
-                try {
-                  const res = await fetch(`/api/menus?id=${menuel.id}`, {
-                    method: 'DELETE',
-                  })
-                  const result = await res.json()
-                  if (!res.ok) throw new Error(result.error || 'Ошибка при удалении')
+  //   </div>
 
-                  alert('Меню удалено')
-                  // обновляем список без перезагрузки
-                  router.refresh()// или лучше обновлять state
-                } catch (err: unknown) {
-                  alert(err instanceof Error ? err.message : 'Ошибка')
-                }
-              }}
+  //   <div className={styles.grid}>
+  //     {(menuState || []).map(menuel => (
+
+  //       <div key={menuel.id} className="menuCard">
+  //         <Link href={`/admin/menu/${menuel.id}`}>
+  //           <Image
+  //             src={menuel.image_url || pagefood}
+  //             alt={menuel.name}
+  //             style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px' }}
+  //             width={400}
+  //             height={180}
+  //           />
+  //           <p style={{ marginTop: '8px', fontWeight: '600', fontSize: '1rem' }}>{menuel.name}</p>
+
+  //         </Link>
+  //         <div className={styles.actionButtons}>
 
 
-                className={`${styles.actionButton} ${styles.delete}`
-                }>🗑️</button>
-              <label className={styles.toggleSwitch}>
-                <input
-                  type="checkbox"
-                  checked={menuel.is_available}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={async (e) => {
-                    e.stopPropagation()
+  //           <Link href={`/admin/menu/${menuel.id}/edit`} className={`${styles.actionButton} ${styles.edit}`}>
+  //             ✏️
+  //           </Link>
 
-                    const newValue = e.target.checked
+  //           <button onClick={async (e) => {
+  //             e.preventDefault()
+  //             if (!confirm(`Удалить все меню "${menuel.name}"?`)) return
 
-                    try {
-                      const res = await fetch('/api/menus/toggle', {
-                        method: 'PATCH',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          id: menuel.id,
-                          is_available: newValue,
-                        }),
-                      })
+  //             try {
+  //               const res = await fetch(`/api/menus?id=${menuel.id}`, {
+  //                 method: 'DELETE',
+  //               })
+  //               const result = await res.json()
+  //               if (!res.ok) throw new Error(result.error || 'Ошибка при удалении')
 
-                      const result = await res.json()
-                      if (!res.ok) throw new Error(result.error || 'Ошибка')
+  //               alert('Меню удалено')
+  //               // обновляем список без перезагрузки
+  //               router.refresh()// или лучше обновлять state
+  //             } catch (err: unknown) {
+  //               alert(err instanceof Error ? err.message : 'Ошибка')
+  //             }
+  //           }}
 
-                      setMenu(prev =>
-                        prev.map(d =>
-                          d.id === menuel.id ? { ...d, is_available: newValue } : d
-                        )
-                      )
-                    } catch (err: unknown) {
-                      alert(err instanceof Error ? err.message : 'Ошибка')
-                    }
-                  }}
-                />
-                <span className={styles.slider}></span>
-              </label>
-            </div>
-          </div>
 
-        ))
-        }
-      </div >
-    </div >
-  )
+  //             className={`${styles.actionButton} ${styles.delete}`
+  //             }>🗑️</button>
+  //           <label className={styles.toggleSwitch}>
+  //             <input
+  //               type="checkbox"
+  //               checked={menuel.is_available}
+  //               onClick={(e) => e.stopPropagation()}
+  //               onChange={async (e) => {
+  //                 e.stopPropagation()
+
+  //                 const newValue = e.target.checked
+
+  //                 try {
+  //                   const res = await fetch('/api/menus/toggle', {
+  //                     method: 'PATCH',
+  //                     headers: {
+  //                       'Content-Type': 'application/json',
+  //                     },
+  //                     body: JSON.stringify({
+  //                       id: menuel.id,
+  //                       is_available: newValue,
+  //                     }),
+  //                   })
+
+  //                   const result = await res.json()
+  //                   if (!res.ok) throw new Error(result.error || 'Ошибка')
+
+  //                   setMenu(prev =>
+  //                     prev.map(d =>
+  //                       d.id === menuel.id ? { ...d, is_available: newValue } : d
+  //                     )
+  //                   )
+  //                 } catch (err: unknown) {
+  //                   alert(err instanceof Error ? err.message : 'Ошибка')
+  //                 }
+  //               }}
+  //             />
+  //             <span className={styles.slider}></span>
+  //           </label>
+  //         </div>
+  //       </div>
+
+  //     ))
+  //     }
+  //   </div >
+  // </div >
+  // )
 }
 export default AdminPage
 

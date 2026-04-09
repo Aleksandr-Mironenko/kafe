@@ -1,11 +1,13 @@
-import AdminPage from '@/app/components/AdminPage/AdminPage'
-import { getMenus } from '@/services/menuServise'
+// import AdminPage from '@/app/components/AdminPage/AdminPage'
+// import { getMenus } from '@/services/menuServise'
 export default async function Admin() {
 
-  const menu = await getMenus() // получу все меню и передам на отображение
+  // const menu = await getMenus() // получу все меню и передам на отображение
 
-  return <AdminPage menu={menu} />
+  return
+  // <AdminPage menu={menu} />
 }
+
 
 //  import AdminPage
 //  export default async function Admin({ params }: { params: Promise<{ id: string }> }) {
