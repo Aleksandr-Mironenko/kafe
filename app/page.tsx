@@ -1,3 +1,11 @@
+// 👉 тебе нужно:
+
+// Завести карточку в Яндекс Бизнес
+// Привязать к этому же адресу и телефону
+// Добавить сайт
+
+
+
 import styles from './styles/pageStyles.module.scss'
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -8,27 +16,49 @@ export default function Home() {
 
   return (
     <>
-      {/* Organization */}
+      {/* Local Business */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FoodEstablishment",
+            name: "Кафе и услуги питания в Бору",
+            url: BASE_URL,
+            areaServed: "Бор, Нижегородская область",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "ул. Неклюдово, 1",
+              addressLocality: "Бор",
+              addressRegion: "Нижегородская область",
+              addressCountry: "RU",
+            },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 56.404115,
+              longitude: 44.006722,
+            },
+            servesCuisine: "Русская кухня",
+            openingHours: "Mo-Su 09:00-20:00",
+            priceRange: "₽₽",
+            description:
+              "Кафе, кейтеринг и организация питания в городе Бор: банкеты, поминки, корпоративное питание",
+            telephone: "+7-961-638-50-60",
+            email: "n.tranceva@mail.ru",
+          }),
+        }}
+      />
+      {/* Legal Organization */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "Kantar Logistic — Кантар Логистик",
-            url: BASE_URL,
-            description:
-              "Kantar Logistic — международная логистическая компания, выполняющая грузоперевозки по России, Европе и Азии.",
-            contactPoint: {
-              "@type": "ContactPoint",
-              telephone: "+7-910-105-64-23",
-              contactType: "customer service",
-              email: "kantarlog@mail.ru",
-            },
+            name: "ИП Транцева Наталья Алексеевна",
           }),
         }}
       />
-
       {/* WebSite + SearchAction */}
       <script
         type="application/ld+json"
@@ -65,31 +95,37 @@ export default function Home() {
         }}
       />
 
-      {/*  <main
+      <main
         style={{
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
-         <Header />
+
+        <Header />
+
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
-          Международные грузоперевозки Kantar Logistic — логистика, доставка грузов, транспортные решения по России, Европе и Азии
+          Кафе и услуги питания в Бору — кейтеринг, банкеты, корпоративное питание
         </h1>
 
 
-        <AdminPage />
+        {/* <AdminPage /> */}
         <section  >
           <h2 className={styles.visuallyHidden}>
-            Логистическая компания Kantar Logistic — международные перевозки
+            Организация питания: кафе, выездное обслуживание и питание для организаций
           </h2>
           <p className={styles.visuallyHidden}>
-            Kantar Logistic — международная логистическая компания, выполняющая перевозки коммерческих грузов, личных вещей и сборных отправлений по России, Европе и Азии. Мы предлагаем комплексные транспортные решения, включая подбор оптимального маршрута, страхование, таможенное оформление и доставку «до двери».
+            ИП Транцева Наталья Алексеевна оказывает услуги общественного питания в городе Бор и Нижегородской области. Основные направления - работа кафе, организация мероприятий и выездное обслуживание.
+            В кафе можно ежедневно пообедать, провести встречу или заказать питание для небольшой компании. Предлагаются блюда домашней кухни, доступные по цене и подходящие для регулярного посещения.
+            Осуществляется организация мероприятий: корпоративы, банкеты, поминальные обеды и семейные торжества. Подбирается меню, учитываются формат мероприятия и количество гостей.
+            Доступен выездной кейтеринг - приготовление и доставка блюд на площадку заказчика с обслуживанием.
+            Для организаций предлагается питание сотрудников по договору: регулярные поставки готовых обедов или организация питания на территории заказчика.
           </p>
         </section>
 
         <Footer />
-      </main > */}
+      </main >
     </>
   );
 }

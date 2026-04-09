@@ -71,7 +71,7 @@ export default function Footer() {
           target="_blank"
           className={styles.footer__copyright}
         >
-          <span itemProp="copyrightHolder">© 2022–2026 KANTAR Logistics</span>
+          <span itemProp="copyrightHolder">© 2014–2026 BOR FOOD</span>
         </a>
 
         <nav className={styles.footer__links} aria-label="Юридическая информация">
