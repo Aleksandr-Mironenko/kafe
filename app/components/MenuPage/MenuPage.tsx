@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
 
 import styles from './page.module.scss'
 import pagefood from '../../../public/food-dish-svgrepo-com.svg'
@@ -23,10 +23,10 @@ export type Dish = {
 
 export default function MenuPage({ dishes, menu }: { dishes: Dish[]; menu: string }) {
   const router = useRouter()
-  const [dishesState, setDishes] = useState(dishes)
-  useEffect(() => setDishes(dishes)
+  // const [dishesState, setDishes] = useState(dishes)
+  // useEffect(() => setDishes(dishes)
 
-    , [dishes])
+  //   , [dishes])
 
 
   return (
@@ -48,7 +48,7 @@ export default function MenuPage({ dishes, menu }: { dishes: Dish[]; menu: strin
 
 
       <div className={styles.dishList}>
-        {dishesState.map(dish => (
+        {(dishes ?? []).map(dish => (
 
           <div key={dish.id} className={styles.dishCard}>
             <Link href={`/admin/menu/${menu}/dish/${dish.id}`}>
@@ -112,11 +112,8 @@ export default function MenuPage({ dishes, menu }: { dishes: Dish[]; menu: strin
                       const result = await res.json()
                       if (!res.ok) throw new Error(result.error || 'Ошибка')
 
-                      setDishes(prev =>
-                        prev.map(d =>
-                          d.id === dish.id ? { ...d, is_available: newValue } : d
-                        )
-                      )
+                      router.refresh()// или лучше обновлять state
+
                     } catch (err: unknown) {
                       alert(err instanceof Error ? err.message : 'Ошибка')
                     }
