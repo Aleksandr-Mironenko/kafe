@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2px; // gap-0.5
+  max-width: 256px; // max-w-64
+  text-align: left;
+  cursor: pointer;
+
+  @media (min-width: 1024px) {
+    gap: 8px; // lg:gap-2
+  }
+}
+
+.icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.text {
+  font-size: 14px; // text-sm
+  line-height: 1;
+  padding: 2px 0; // py-0.5
+
+  width: min-content; // w-min
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4; // line-clamp-4
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  @media (min-width: 1024px) {
+    font-size: 16px; // lg:text-base
+  }
+}

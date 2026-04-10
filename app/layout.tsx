@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   },
 
   robots: {
-    index: true,
-    follow: true,
+    index: false,//true
+    follow: false,//true
   },
 
   openGraph: {

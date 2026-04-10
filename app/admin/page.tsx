@@ -9,12 +9,3 @@ export default async function Admin() {
 
   return <AdminPage menu={menu} />
 }
-
-//  import AdminPage
-//  export default async function Admin({ params }: { params: Promise<{ id: string }> }) {
-//   const { id } = await params;
-//   const numberOrder = Number(id);
-//   return <AdminPage numberOrder={numberOrder} />
-// }
-
-

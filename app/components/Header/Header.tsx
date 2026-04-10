@@ -1,9 +1,10 @@
-
-
 import styles from "./Header.module.scss";
 import logo from "@/public/logo-black-svg (1).svg";
 import Image from "next/image";
 import Link from "next/link";
+import WorkingHours from "../WorkingHours/WorkingHours";
+import PhoneLink from "../PhoneLink/PhoneLink";
+import LocationCity from "../LocationCity/LocationCity";
 
 
 
@@ -25,16 +26,43 @@ export default function Header() {
 
           <div className={styles.header__nav_menu}>
             <Link href="/services" className={styles.header__nav_link}>
+              Доставка и оплата
+            </Link>
+          </div>
+
+          <div className={styles.header__nav_menu}>
+            <Link href="/services" className={styles.header__nav_link}>
+              Статьи </Link>
+          </div>
+          <div className={styles.header__nav_menu}>
+            <Link href="/services" className={styles.header__nav_link}>
+              Услуги </Link>
+          </div>
+          <div className={styles.header__nav_menu}>
+            <input
+              type="search"
+              placeholder="Поиск по меню"
+              autoComplete="off"
+              required
+              className={styles.input}
+            />
+          </div>
+
+          <WorkingHours />
+          <PhoneLink />
+          <LocationCity />
+          <div className={styles.header__nav_menu}>
+            {/* <Link href="/services" className={styles.header__nav_link}>
               УСЛУГИ
-            </Link>
+            </Link> */}
 
-            <Link href="/info" className={styles.header__nav_link}>
+            {/* <Link href="/info" className={styles.header__nav_link}>
               О НАС
-            </Link>
+            </Link> */}
 
-            <Link href="/contacts" className={styles.header__nav_link}>
+            {/* <Link href="/contacts" className={styles.header__nav_link}>
               КОНТАКТЫ
-            </Link>
+            </Link> */}
 
             {/* Клиентский компонент — плавный скролл */}
 
@@ -44,8 +72,8 @@ export default function Header() {
 
           </div>
         </nav>
-      </div>
-    </header>
+      </div >
+    </header >
 
   );
-}
+} 
