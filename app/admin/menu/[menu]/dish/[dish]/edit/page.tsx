@@ -9,9 +9,5 @@ export default async function DishEdit({ params }: { params: Promise<{ menu: str
 
   const dishObj = await getDishById(dish)
   return <DishFormEdit menuId={menu} dishId={dishObj?.id} initialData={dishObj} />
-  // <DishPage menu={menu} dish={dishObj} />
 }
 
-
-
-{/* <DishFormEdit menuId={menu} dishId={dishObj?.id as string} initialData={dishObj as Dish} /> */ }
