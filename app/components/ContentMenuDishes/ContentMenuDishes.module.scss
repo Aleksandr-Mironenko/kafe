@@ -1,1 +1,14 @@
- 
+ .noscrollbar::-webkit-scrollbar {
+   display: none;
+ }
+
+ .image {
+   border-radius: 8px;
+   background-color: transparent
+ }
+
+ .imageselect {
+
+   border-radius: 8px;
+   background-color: rgba(0, 0, 0, 0.6)
+ }

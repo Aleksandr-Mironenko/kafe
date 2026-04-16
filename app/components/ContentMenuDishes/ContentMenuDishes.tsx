@@ -1,15 +1,13 @@
 "use client"
 
-// import ContentInfoBlock from "../ContentInfoBlock/ContentInfoBlock"
-// import ContentMenuDishes from "../ContentMenuDishes/ContentMenuDishes"
 
 import ButtonAdd from "../ButtonAdd/ButtonAdd";
 import ButtonDel from "../ButtonDel/ButtonDel";
 import Image from "next/image"
 // import ButtonAdd from "../ButtonAdd/ButtonAdd";
 // import ButtonDelete from "../ButtonDelete/ButtonDelete";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useRef } from "react";
+import styles from "./ContentMenuDishes.module.scss"
 type Menu = {
   id: string;
   name: string;
@@ -22,11 +20,11 @@ export type Dish = {
   id: string
   menu_id: string
   name: string
-  ingredients?: string
+  ingredients: string
   short_description?: string
   full_description?: string
   weight?: string
-  price?: number
+  price: number
   image_url?: string
   order_index?: number
   is_available?: boolean
@@ -35,7 +33,11 @@ type CartItem = Dish & { quantity: number }
 
 const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) => {
   const [ls, setLs] = useState<CartItem[]>([])
+  const [scrollState, setScrollState] = useState<
+    Record<string, { left: boolean; right: boolean }>
+  >({})
 
+  const scrollRefs = useRef<Record<string, HTMLUListElement | null>>({}); const STEP = 222;
   const getCard = () => {
     const stored = localStorage.getItem("cart")
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
@@ -71,78 +73,195 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
     }
   }, [])
 
+  const checkScroll = (id: string) => {
+    const el = scrollRefs.current[id]
+    if (!el) return
+
+    const left = el.scrollLeft > 0
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+
+    setScrollState(prev => ({
+      ...prev,
+      [id]: { left, right }
+    }))
+  }
+
+  useEffect(() => {
+    menu.forEach(m => {
+      setTimeout(() => checkScroll(m.id), 0)
+    })
+  }, [menu, dishes])
+
+
+
+
   const updateCart = (updated: CartItem[]) => {
     localStorage.setItem("cart", JSON.stringify(updated))
     window.dispatchEvent(new Event("cartUpdated"))
     setLs(updated)
   }
 
+  const scrollLeft = (id: string) => {
+    const el = scrollRefs.current[id]
+    if (!el) return
+
+    el.scrollBy({ left: -STEP, behavior: "smooth" })
+    setTimeout(() => checkScroll(id), 700)
+  }
+
+  const scrollRight = (id: string) => {
+    const el = scrollRefs.current[id]
+    if (!el) return
+
+    el.scrollBy({ left: STEP, behavior: "smooth" })
+    setTimeout(() => checkScroll(id), 700)
+  }
 
 
+
+  const correctText = (el: string, len: number) => {
+    return el.slice(0, len - 3) + "..."
+  }
 
   const ddd = menu.map((el: Menu) => {
     const filteredDishes = dishes.filter((dish: Dish) =>
       dish.menu_id === el.id && dish.is_available);
 
     const arrDishes =
-      filteredDishes.map((dish: Dish) => (
-        <li style={{ margin: "10px", border: "1px solid black", borderRadius: "8px", position: "relative" }} key={dish.id}>
-          {dish.image_url &&
-            <div style={{ height: "100px", width: "100px" }}>
-              <Image
-                style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-                width={100}
-                height={100}
-                src={dish.image_url}
-                alt={dish.name} /></div>}
-          <p>{dish.name}</p>
-          <p>{dish.weight}</p>
-          <p>{dish.price}</p>
-          <ButtonDel dish={dish} ls={ls} updateCart={updateCart} />
-          <ButtonAdd dish={dish} updateCart={updateCart} />
+      filteredDishes.map((dish: Dish) => {
+        const quantity = ls.find(el => el.id === dish.id)?.quantity || 0
 
-          {/* <button
-            onClick={() => addItem(dish)}
-            style={{
-              position: "absolute",
-              right: "5px",
-              bottom: "5px",
-              width: "44px",
-              height: "44px",
-              borderRadius: "8px",
-              color: "white",
-              backgroundColor: "black",
-            }}
-          >  -
-          </button> */}
+        return (
+          <li style={{ margin: "10px", padding: "5px", border: "1px solid black", borderRadius: "8px", position: "relative", display: "flex", flexDirection: "column" }} key={dish.id}>
+            <p style={{ margin: "0 auto", fontSize: "20px" }}>{dish.name}</p>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <div style={{ position: "relative" }}>
+                {dish.image_url &&
+                  <div style={{ height: "100px", width: "100px" }}>
+                    <Image
+                      // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
+                      className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
+                      width={100}
+                      height={100}
+                      src={dish.image_url}
+                      alt={dish.name} />
+                  </div>
+                }
+                {quantity !== 0 && <p style={{ color: "white", fontWeight: "700", display: "flex", alignItems: "center", justifyContent: "center", width: "40px", fontSize: "40px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -60%)" }}>
+                  {ls.find(el => el.id === dish.id)?.quantity || ""}</p>}
 
 
-          {/* <button
-            // onClick={() => addItem(dish)}
-            style={{
-              position: "absolute",
-              right: "5px",
-              bottom: "5px",
-              width: "44px",
-              height: "44px",
-              borderRadius: "8px",
-              color: "white",
-              backgroundColor: "black",
-            }}
-          >
-            +
-          </button> */}
-        </li>
-      ))
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+
+                </div>
+              </div>
+              <div style={{ width: "100px", fontSize: "14px", marginTop: "5px" }}>
+                <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
+                <p style={{ textAlign: "right" }}>{dish.weight} гр.</p>
+
+              </div>
+
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+              {quantity !== 0 ?
+                <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>
+                  {quantity !== 0 &&
+                    <ButtonDel dish={dish} ls={ls} updateCart={updateCart} />
+                  }
+                  <p>{dish.price}</p>
+                  <ButtonAdd dish={dish} updateCart={updateCart} marker={"+"} />
+                </div>
+                :
+                <p>{dish.price} руб.</p>
+              }
+              {quantity === 0 && <ButtonAdd dish={dish} updateCart={updateCart} marker={"Добавить"} />}
+            </div>
+          </li >
+        )
+      })
 
 
-    return arrDishes.length !== 0 && el.is_available && <li style={{ position: "relative" }} key={el.id}>
-      <h3>{el.name}</h3>
-      <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}>
-        <ul style={{ listStyleType: "none", display: "flex", gap: "15px", flexDirection: "row" }}>{arrDishes}</ul>
-      </div >
-      <div style={{ position: "absolute", left: "30px", top: "50%", transform: "translateY(-50%)", width: "44px", height: "44px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "white", backgroundColor: "black" }}>{`<`}</div>
-      <div style={{ position: "absolute", right: "30px", top: "50%", transform: "translateY(-50%)", width: "44px", height: "44px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "white", backgroundColor: "black" }}>{`>`}</div>
+    return arrDishes.length !== 0 && el.is_available && <li
+      style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }} key={el.id}>
+      <h3 style={{ margin: "10px auto 0", fontSize: "30px" }}>{el.name}</h3>
+      {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
+      <div style={{
+        position: "relative",
+      }}>
+        {scrollState[el.id]?.left && (<div
+          onClick={() => scrollLeft(el.id)}
+          style={{
+            position: "absolute",
+            left: "30px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "44px",
+            height: "44px",
+            borderRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            backgroundColor: "black"
+          }}
+        >
+          {"<"}
+        </div>
+        )}
+        <div
+          style={{
+            width: "85%",
+            maxWidth: "1000px", // ограничение
+            minWidth: "300px",
+            overflow: "hidden",
+            margin: "0 auto",
+
+          }}>
+
+          <ul ref={(el) => {
+            scrollRefs.current[el?.dataset.menuid || ""] = el;
+          }}
+            data-menuid={el.id}
+            onScroll={() => checkScroll(el.id)}
+            className={styles.noscrollbar} style={{
+              listStyleType: "none",
+              display: "flex",
+              gap: "5px",
+              flexDirection: "row",
+              overflowX: "hidden",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              maxWidth: "100%",
+              // justifyContent: "center",
+              alignItems: "center"
+            }}>
+            {arrDishes}
+          </ul>
+
+
+        </div >
+        {scrollState[el.id]?.right && (<div
+          onClick={() => scrollRight(el.id)}
+          style={{
+            position: "absolute",
+            right: "30px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "44px",
+            height: "44px",
+            borderRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            backgroundColor: "black"
+          }}
+        >
+          {">"}
+        </div>
+
+        )}
+      </div>
 
     </li >
 

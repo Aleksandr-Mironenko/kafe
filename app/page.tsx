@@ -14,6 +14,8 @@ import Footer from './components/Footer/Footer';
 import Menus from './components/Menus/Menus';
 import Content from './components/Content/Content';
 import Basket from './components/Basket/Basket';
+
+export const dynamic = "force-dynamic"
 export default function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -126,12 +128,12 @@ export default function Home() {
             Для организаций предлагается питание сотрудников по договору: регулярные поставки готовых обедов или организация питания на территории заказчика.
           </p>
         </section>
-        <main style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px" }}>
+        <main style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px", maxWidth: "1500px", margin: "0 auto", marginBottom: "auto" }}>
           <aside style={{ minWidth: "200px", width: "20%", height: "100%" }}>
             <Menus />
           </aside>
           <Content />
-          <aside style={{ minWidth: "200px", width: "27%", height: "100%" }}>
+          <aside style={{ minWidth: "300px", width: "27%", height: "100%" }}>
             <Basket />
           </aside>
         </main>

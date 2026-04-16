@@ -14,11 +14,11 @@ export type Dish = {
   id: string
   menu_id: string
   name: string
-  ingredients?: string
+  ingredients: string
   short_description?: string
   full_description?: string
   weight?: string
-  price?: number
+  price: number
   image_url?: string
   order_index?: number
   is_available?: boolean
@@ -252,164 +252,173 @@ const Basket = () => {
     }
   };
 
-  return <>
-    <div>
-      <button className={`${delivery ? styles.buttonActive : styles.button}`} onClick={() => setDelivery(false)}>Самовывоз</button>
-      <button className={`${delivery ? styles.button : styles.buttonActive}`} onClick={() => setDelivery(true)}>Доставка</button>
-    </div>
+  return (
+    <div className={styles.basket} >
+      <div style={{ margin: "20px 0" }}>
+        <button className={`${delivery ? styles.buttonActive : styles.button}`} onClick={() => setDelivery(false)}>Самовывоз</button>
+        <button className={`${delivery ? styles.button : styles.buttonActive}`} onClick={() => setDelivery(true)}>Доставка</button>
+      </div>
 
-    <div style={{ margin: "20px 0", border: "1px solid black", padding: "20px", borderRadius: "8px", height: "90px", display: "flex", alignItems: "center" }}>
-      {!delivery && (<p>Адрес кафе г.Бор, ул. Неклюдово, д.1</p>)}
-      {delivery && (
-        <>
-          <label htmlFor="address">Адрес доставки:</label>
-          <input style={{ marginLeft: "10px", border: "1px solid black", padding: "10px", borderRadius: "5px" }} autoComplete="address-line1" id="address" type="text" placeholder="Улица, дом, квартира" />
-        </>
-      )}
-    </div>
-    <form style={{ margin: "20px 0", border: "1px solid black", padding: "20px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
-      <h3>Корзина</h3>
-      {ls.length < 1 ? <p>Пока что пусто...</p> :
-        ls.map(el => (
-          <li key={el.id} style={{ display: "flex", flexDirection: "row" }}>
-            <Image src={el.image_url || pagefood} alt={el.name} className={styles.dishImage} width={80} height={80} />
-            <div >
-              <p>{el.name}</p>
-              <div style={{
-                width: '100%',
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
+      <div style={{ margin: "10px 0", border: "1px solid black", padding: "20px", borderRadius: "8px", height: "90px", display: "flex", alignItems: "center" }}>
+        {!delivery && (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <p>Адрес кафе </p>
+            <p>г.Бор, ул. Неклюдово, д.1</p>
+          </div>
+        )}
+        {delivery && (
 
-              }}>
-                < ButtonDel dish={el} updateCart={updateCart} ls={ls} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', fontSize: '15px' }}>
-                  {el.quantity}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <label htmlFor="address">Адрес доставки:</label>
+            <input style={{ width: "100%", border: "1px solid black", padding: "10px", borderRadius: "5px" }} autoComplete="address-line1" id="address" type="text" placeholder="Улица, дом, квартира" />
+          </div>
+
+        )}
+      </div>
+      <form style={{ margin: "20px 0", border: "1px solid black", padding: "20px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
+        <h3>Корзина</h3>
+        {ls.length < 1 ? <p>Пока что пусто...</p> :
+          ls.map(el => (
+            <li key={el.id} style={{ display: "flex", flexDirection: "row" }}>
+              <Image src={el.image_url || pagefood} alt={el.name} className={styles.dishImage} width={80} height={80} />
+              <div >
+                <p>{el.name}</p>
+                <div style={{
+                  width: '100%',
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+
+                }}>
+                  < ButtonDel dish={el} updateCart={updateCart} ls={ls} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', fontSize: '15px' }}>
+                    {el.quantity}
+                  </div>
+                  < ButtonAdd dish={el} updateCart={updateCart} marker={"+"} />
                 </div>
-                < ButtonAdd dish={el} updateCart={updateCart} />
               </div>
-            </div>
-          </li>
+            </li>
 
-        ))
-      }
-      {/* список из lokal storage */}
-      <p>Детали заказа:</p>
-      <p>Товаров на сумму:</p>
-      <p>Услуг на сумму:</p>
-      <p>Итого:</p>
-
-
-      <div className={styles.label__wrapper}  >
-        <label className={errors.name ? styles.label_error : styles.label}>
-          Ваше имя
-          <input autoComplete="given-name" {...register("name")} className={`${styles.input} ${errors.name ? styles.error : ""}`} placeholder="Введите ваше имя"
-          />
-
-          {errors.name && <p className={styles.errmsg}>{errors.name.message}</p>}
-        </label>
-      </div>
-      <div className={styles.label__wrapper} >
-        <label className={`${styles.phone} ${errors.phone ? styles.label_error : styles.label}`}>
-          Укажите телефон
-          <Controller
-            name="phone"
-            control={control}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <IMaskInput
-                id="phone"
-                autoComplete="tel"
-                mask="+7 (000) 000-00-00"
-                placeholder="+7 (___) ___-__-__"
-                value={value ?? ""}
-                onAccept={(formatted) => {
-
-                  const digits = formatted.replace(/\D/g, "");
-                  const withoutPhone = digits.slice(1);
-                  onChange(withoutPhone);
-                }}
-                onBlur={onBlur}
-                inputRef={ref}
-                className={`${styles.input} ${errors.phone ? styles.error : ""}`}
-              />
-            )}
-          />
-
-          {errors.phone && (
-            <p className={styles.errmsg}>{errors.phone.message}</p>
-          )}
+          ))
+        }
+        {/* список из lokal storage */}
+        <p>Детали заказа:</p>
+        <p>Товаров на сумму:</p>
+        <p>Услуг на сумму:</p>
+        <p>Итого:</p>
 
 
-        </label>
-      </div>
-      <div className={styles.label__wrapper} >
-        <label className={errors.email ? styles.label_error : styles.label}>
-          Укажите эл.почту
-          <input autoComplete="email" {...register("email")}
-            className={`${styles.input} ${errors.email ? styles.error : ""}`} placeholder="example@mail.ru"
-          />
-          {errors.email && <p className={styles.errmsg}>{errors.email.message}</p>}
-        </label>
-      </div>
-      <div className={styles.label__wrapper}  >
-        <label className={styles.modal__checkbox}>
-          <input
-            type="checkbox"
-            {...register("agree")}
-          />
-          <span>Согласен с обработкой <a className={styles.modal__checkbox_policy} href="policy">персональных данных</a></span>
-
-        </label>
-        {errors.agree && <p className={styles.agreeErrmsg}>Согласие обязательно</p>}
-      </div>
-      {isCode ?
         <div className={styles.label__wrapper}  >
-          {lastCode ? <p>{`Проверьте почту, повторная отправка через 10минут`}</p> : null}
-
-
-          <label htmlFor="code" className={`${styles.index} ${styles.label}`}>
-            Введите код подтверждения
-            <input
-              type="text"
-              autoComplete="off"
-              name="code"
-              id="code"
-              placeholder="****"
-              value={code ?? ""}
-              onChange={e => onChangeCode(e.target.value)}
-              className={styles.input}
+          <label className={errors.name ? styles.label_error : styles.label}>
+            Ваше имя
+            <input autoComplete="given-name" {...register("name")} className={`${styles.input} ${errors.name ? styles.error : ""}`} placeholder="Введите ваше имя"
             />
-          </label>
-          <button
-            type="button"
-            className={styles.modal__submit} onClick={(e) => {
-              checkodeSubmit(e)
 
-            }
-            } >
+            {errors.name && <p className={styles.errmsg}>{errors.name.message}</p>}
+          </label>
+        </div>
+        <div className={styles.label__wrapper} >
+          <label className={`${styles.phone} ${errors.phone ? styles.label_error : styles.label}`}>
+            Укажите телефон
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <IMaskInput
+                  id="phone"
+                  autoComplete="tel"
+                  mask="+7 (000) 000-00-00"
+                  placeholder="+7 (___) ___-__-__"
+                  value={value ?? ""}
+                  onAccept={(formatted) => {
+
+                    const digits = formatted.replace(/\D/g, "");
+                    const withoutPhone = digits.slice(1);
+                    onChange(withoutPhone);
+                  }}
+                  onBlur={onBlur}
+                  inputRef={ref}
+                  className={`${styles.input} ${errors.phone ? styles.error : ""}`}
+                />
+              )}
+            />
+
+            {errors.phone && (
+              <p className={styles.errmsg}>{errors.phone.message}</p>
+            )}
+
+
+          </label>
+        </div>
+        <div className={styles.label__wrapper} >
+          <label className={errors.email ? styles.label_error : styles.label}>
+            Укажите эл.почту
+            <input autoComplete="email" {...register("email")}
+              className={`${styles.input} ${errors.email ? styles.error : ""}`} placeholder="example@mail.ru"
+            />
+            {errors.email && <p className={styles.errmsg}>{errors.email.message}</p>}
+          </label>
+        </div>
+        <div className={styles.label__wrapper}  >
+          <label className={styles.modal__checkbox}>
+            <input
+              type="checkbox"
+              {...register("agree")}
+            />
+            <span>Согласен с обработкой <a className={styles.modal__checkbox_policy} href="policy">персональных данных</a></span>
+
+          </label>
+          {errors.agree && <p className={styles.agreeErrmsg}>Согласие обязательно</p>}
+        </div>
+        {isCode ?
+          <div className={styles.label__wrapper}  >
+            {lastCode ? <p>{`Проверьте почту, повторная отправка через 10минут`}</p> : null}
+
+
+            <label htmlFor="code" className={`${styles.index} ${styles.label}`}>
+              Введите код подтверждения
+              <input
+                type="text"
+                autoComplete="off"
+                name="code"
+                id="code"
+                placeholder="****"
+                value={code ?? ""}
+                onChange={e => onChangeCode(e.target.value)}
+                className={styles.input}
+              />
+            </label>
+            <button
+              type="button"
+              className={styles.modal__submit} onClick={(e) => {
+                checkodeSubmit(e)
+
+              }
+              } >
+              отправить код подтверждения
+            </button>
+
+
+
+          </div> : <button type="button" disabled={!isFilled}
+            className={styles.modal__submit} onClick={(e) => sendVerificationCode(e)} >
             отправить код подтверждения
           </button>
+          //handleSubmit(onSubmit
+        }
+        <p>{textReaponse}</p>
+        {isFiledCheck === 'filledTime' && <button type="button" className={styles.modal__submit} onClick={(e) => sendVerificationCode(e)}>повторный запрос кода</button>}
 
 
-
-        </div> : <button type="button" disabled={!isFilled}
-          className={styles.modal__submit} onClick={(e) => sendVerificationCode(e)} >
-          отправить код подтверждения
+        <button
+          disabled={!(trueCode && isFilled)  /*isValid*/} className={styles.modal__submit} type="submit" >
+          отправить
         </button>
-        //handleSubmit(onSubmit
-      }
-      <p>{textReaponse}</p>
-      {isFiledCheck === 'filledTime' && <button type="button" className={styles.modal__submit} onClick={(e) => sendVerificationCode(e)}>повторный запрос кода</button>}
 
 
-      <button
-        disabled={!(trueCode && isFilled)  /*isValid*/} className={styles.modal__submit} type="submit" >
-        отправить
-      </button>
-
-
-    </form >
-  </>
+      </form >
+    </div>
+  )
 }
 export default Basket 

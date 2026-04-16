@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./MenuList.module.scss"
 type Menu = {
   id: string;
   name: string;
@@ -10,7 +11,7 @@ type Menu = {
 
 export default async function MenuList({ menu }: { menu: Menu[] }) {
   const menulist = menu.map(menuel => {
-    return <li key={menuel.id}>
+    return <li className={styles.li} key={menuel.id}>
       <Link href={`/menu/${menuel.id}`} key={menuel.id}>
         <h3>{menuel.name}</h3>
       </Link>

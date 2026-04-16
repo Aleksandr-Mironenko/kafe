@@ -65,32 +65,35 @@ export default function Footer() {
 
 
       <footer id="contacts" className={styles.footer} aria-label="Футер сайта">
-        <a
-          href="/Kantar.pdf"
-          rel="noopener noreferrer"
-          target="_blank"
-          className={styles.footer__copyright}
-        >
-          <span itemProp="copyrightHolder">© 2014–2026 BOR FOOD</span>
-        </a>
-
-        <nav className={styles.footer__links} aria-label="Юридическая информация">
+        <div
+          className={styles.footer__wrapper}>
           <a
-            href="/rkn.pdf"
+            href="/Kantar.pdf"
             rel="noopener noreferrer"
             target="_blank"
+            className={styles.footer__copyright}
           >
-            Политика конфиденциальности
+            <span itemProp="copyrightHolder">© 2014–2026 BOR FOOD</span>
           </a>
 
-          <a
-            href="/policy"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Пользовательское соглашение
-          </a>
-        </nav>
+          <nav className={styles.footer__links} aria-label="Юридическая информация">
+            <a
+              href="/rkn.pdf"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Политика конфиденциальности
+            </a>
+
+            <a
+              href="/policy"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Пользовательское соглашение
+            </a>
+          </nav>
+        </div>
       </footer>
     </>
   );

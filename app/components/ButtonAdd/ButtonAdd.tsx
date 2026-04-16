@@ -1,19 +1,20 @@
+import styles from './ButtonAdd.module.scss'
 export type Dish = {
   id: string
   menu_id: string
   name: string
-  ingredients?: string
+  ingredients: string
   short_description?: string
   full_description?: string
   weight?: string
-  price?: number
+  price: number
   image_url?: string
   order_index?: number
   is_available?: boolean
 }
 type CartItem = Dish & { quantity: number }
 
-const ButtonAdd = ({ dish, updateCart }: { dish: Dish, updateCart: (updated: CartItem[]) => void }) => {
+const ButtonAdd = ({ dish, updateCart, marker }: { dish: Dish, updateCart: (updated: CartItem[]) => void, marker: string }) => {
   const addToCart = () => {
     const stored = localStorage.getItem("cart")
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
@@ -32,18 +33,8 @@ const ButtonAdd = ({ dish, updateCart }: { dish: Dish, updateCart: (updated: Car
   }
 
   return (
-    <button onClick={addToCart} style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: "28px",
-      width: "30px",
-      height: "30px",
-      borderRadius: "8px",
-      color: "white",
-      backgroundColor: "black",
-    }}>
-      +
+    <button onClick={addToCart} className={`${marker === "+" ? styles.plus : styles.add} `}>
+      {marker}
     </button>
   )
 }

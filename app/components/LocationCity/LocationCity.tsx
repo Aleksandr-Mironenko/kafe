@@ -9,7 +9,7 @@ export default function Location() {
       />
 
       <div className={styles.text}>
-        Нижний Новгород
+        Бор
       </div>
     </div>
   );

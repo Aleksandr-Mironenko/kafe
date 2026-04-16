@@ -33,7 +33,7 @@ export default async function Content() {
     const elDishes = await getDishes(el.id)
     dishes.push(...elDishes)
   }
-  return <div style={{ display: "flex", gap: "20px", flexDirection: "column" }}>
+  return <div style={{ display: "flex", gap: "20px", flexDirection: "column", maxWidth: "1500px" }}>
     <ContentInfoBlock />
     <ContentMenuDishes menu={menu} dishes={dishes} />
   </div>

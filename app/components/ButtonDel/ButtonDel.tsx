@@ -2,11 +2,11 @@ export type Dish = {
   id: string
   menu_id: string
   name: string
-  ingredients?: string
+  ingredients: string
   short_description?: string
   full_description?: string
   weight?: string
-  price?: number
+  price: number
   image_url?: string
   order_index?: number
   is_available?: boolean
