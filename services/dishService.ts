@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import cyrillicToTranslit from 'cyrillic-to-translit-js'
 
 export type Dish = {
   id: string
@@ -38,6 +39,18 @@ export const getDishById = async (id: string) => {
   return data
 }
 
+// Получить блюдо по URL
+export const getDishByUrl = async (url_name: string) => {
+  const { data, error } = await supabase
+    .from('dishes')
+    .select('*')
+    .eq('url_name', url_name)
+    .single()  // возвращает один объект
+
+  if (error) throw error
+  return data
+}
+
 // Создать блюдо (🔥 аналог createMenu)
 export const createDish = async ({
   menu_id,
@@ -61,6 +74,14 @@ export const createDish = async ({
   is_available?: boolean
 }) => {
   let imageUrl = ''
+
+  const url_name = cyrillicToTranslit()
+    .transform(name)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '') // убрать спецсимволы
+    .trim()
+    .replace(/\s+/g, '-')
+
 
   if (file) {
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -87,6 +108,7 @@ export const createDish = async ({
     .insert({
       menu_id,
       name,
+      url_name,
       ingredients: ingredients || '',
       short_description: short_description || '',
       full_description: full_description || '',

@@ -34,7 +34,7 @@ const ButtonAdd = ({ dish, updateCart, marker }: { dish: Dish, updateCart: (upda
 
   return (
     <button onClick={addToCart} className={`${marker === "+" ? styles.plus : styles.add} `}>
-      {marker}
+      <div className={`${marker === "+" && styles.plusContent} `} >{marker}</div>
     </button>
   )
 }

@@ -1,12 +1,12 @@
 .footer {
   position: relative;
   padding: 40px;
-  background: #111;
-  color: white;
-
-
+  background-color: rgb(238, 225, 206);
+  color: black;
+  min-width: 626px;
+  margin-top: auto;
   left: 0;
-  min-width: 350px;
+  box-shadow: 0 -6px 10px rgba(0, 0, 0, 0.2);
 
 
   &__wrapper {
@@ -21,11 +21,11 @@
     gap: 20px;
 
     a {
-      color: #aaa;
+      color: black;
       transition: 0.2s;
 
       &:hover {
-        color: #fff;
+        color: rgba(0, 0, 0, 0.6);
       }
     }
 

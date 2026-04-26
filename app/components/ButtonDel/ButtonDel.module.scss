@@ -1,0 +1,23 @@
+ .minus {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 28px;
+   width: 30px;
+   height: 30px;
+   border-radius: 8px;
+   color: white;
+   background-color: rgb(193, 86, 57);
+   background-color: rgb(193, 86, 57);
+   transition: background-color,
+     font-weight;
+
+   &:hover {
+     background-color: rgba(193, 86, 57, 0.8);
+     font-weight: 700;
+   }
+ }
+
+ .minusContent {
+   transform: translateY(-2px)
+ }

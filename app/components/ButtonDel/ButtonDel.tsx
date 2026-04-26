@@ -1,3 +1,5 @@
+import styles from "./ButtonDel.module.scss"
+
 export type Dish = {
   id: string
   menu_id: string
@@ -36,20 +38,10 @@ const ButtonDel = ({ dish, ls, updateCart }: { dish: Dish, ls: CartItem[], updat
   const item = ls.find(i => i.id === dish.id)
   const quantity = item?.quantity ?? 0
   return (
-    quantity > 0 && <button onClick={removeFromCart} style={{
-
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: "28px",
-      width: "30px",
-      height: "30px",
-      borderRadius: "8px",
-      color: "white",
-      backgroundColor: "black",
-    }}>
-      -
-    </button>
+    quantity > 0 && <button onClick={removeFromCart} className={styles.minus}  >
+      <div className={styles.minusContent}>-</div>
+    </button >
   )
 }
 export default ButtonDel
+//    

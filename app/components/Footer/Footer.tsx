@@ -68,7 +68,7 @@ export default function Footer() {
         <div
           className={styles.footer__wrapper}>
           <a
-            href="/Kantar.pdf"
+            href="https://www.sravni.ru/kontragent/524600609359/finance/"
             rel="noopener noreferrer"
             target="_blank"
             className={styles.footer__copyright}

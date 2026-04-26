@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createDish, deleteDish, updateDish } from '@/services/dishService'
 
+
 export type Dish = {
   id: string
   menu_id: string

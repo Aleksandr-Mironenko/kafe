@@ -1,3 +1,184 @@
+// 'use client'
+// import { Resolver } from 'react-hook-form'
+// import { useState } from 'react'
+// import { useForm } from 'react-hook-form'
+// import { yupResolver } from '@hookform/resolvers/yup'
+// import * as yup from 'yup'
+// import styles from './ServiceFormEdit.module.scss'
+// import { useRouter } from 'next/navigation'
+// import Image from 'next/image'
+
+// type ExistingImage = {
+//   id: string
+//   url: string
+// }
+
+// type FormValues = {
+//   name: string
+//   description: string
+//   full_description: string
+//   is_available: boolean
+//   files?: FileList
+// }
+
+// const schema = yup.object({
+//   name: yup.string().required('Название обязательно'),
+//   description: yup.string().required('Описание обязательно'),
+//   full_description: yup.string().required('Полное описание обязательно'),
+//   is_available: yup.boolean().default(false),
+//   files: yup
+//     .mixed() // ✅ ИЗМЕНЕНИЕ: убрали <FileList>
+//     .notRequired()
+//     .test('fileType', 'Только изображения', (value) => {
+//       if (!value) return true
+
+//       const files = value as FileList // ✅ ИЗМЕНЕНИЕ: локальный каст вместо generic
+
+//       if (!files.length) return true
+
+//       const allowed = ['image/png', 'image/jpeg', 'image/svg+xml']
+//       return Array.from(files).every(file => allowed.includes(file.type))
+//     })
+// })
+
+// interface Props {
+//   serviceId: string
+//   initialData: {
+//     name: string
+//     description: string
+//     full_description: string
+//     is_available: boolean
+//   }
+//   initialImages: ExistingImage[]
+// }
+
+// export default function ServiceFormEdit({
+//   serviceId,
+//   initialData,
+//   initialImages
+// }: Props) {
+//   const resolver = yupResolver(schema) as Resolver<FormValues>
+//   const router = useRouter()
+
+//   const [loading, setLoading] = useState(false)
+//   const [images, setImages] = useState(initialImages)
+//   const [removedImages, setRemovedImages] = useState<string[]>([])
+//   const [success, setSuccess] = useState('')
+
+//   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+//     resolver, // ✅ ИЗМЕНЕНИЕ
+//     defaultValues: {
+//       ...initialData,
+//     }
+//   })
+
+//   // ❌ удалить старое изображение
+//   const handleRemoveImage = (id: string) => {
+//     setImages(prev => prev.filter(img => img.id !== id))
+//     setRemovedImages(prev => [...prev, id])
+//   }
+
+//   const onSubmit = async (data: FormValues) => {
+//     setLoading(true)
+//     setSuccess('')
+
+//     try {
+//       const formData = new FormData()
+
+//       formData.append('id', serviceId)
+//       formData.append('name', data.name)
+//       formData.append('description', data.description)
+//       formData.append('full_description', data.full_description)
+//       formData.append('is_available', String(data.is_available))
+
+//       // ➕ новые файлы
+//       if (data.files?.length) {
+//         Array.from(data.files).forEach(file => {
+//           formData.append('files', file)
+//         })
+//       }
+
+//       // ❌ удалённые изображения
+//       removedImages.forEach(id => {
+//         formData.append('removedImages', id)
+//       })
+
+//       const res = await fetch('/api/services', {
+//         method: 'PATCH',
+//         body: formData
+//       })
+
+//       const result = await res.json()
+//       if (!res.ok) throw new Error(result.error || 'Ошибка обновления')
+
+//       setSuccess('Сервис обновлён')
+//       router.push('/admin')
+
+//     } catch (err: unknown) {
+//       alert(err instanceof Error ? err.message : 'Ошибка')
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   return (
+//     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+
+//       <input {...register('name')} placeholder="Название" />
+//       <p>{errors.name?.message}</p>
+
+//       <textarea {...register('description')} placeholder="Описание" />
+//       <p>{errors.description?.message}</p>
+
+//       <textarea {...register('full_description')} placeholder="Полное описание" />
+//       <p>{errors.full_description?.message}</p>
+
+//       <label>
+//         <input type="checkbox" {...register('is_available')} />
+//         Активен
+//       </label>
+
+//       {/* 🖼 EXISTING IMAGES */}
+//       <div className={styles.imagesGrid}>
+//         {images.map(img => (
+//           <div key={img.id} className={styles.imageItem}>
+//             <Image
+//               src={img.url}
+//               alt=""
+//               width={120}
+//               height={100}
+//               className={styles.img}
+//             />
+
+//             <button
+//               type="button"
+//               onClick={() => handleRemoveImage(img.id)}
+//               className={styles.deleteBtn}
+//             >
+//               ✕
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* ➕ NEW FILES */}
+//       <input
+//         type="file"
+//         multiple
+//         {...register('files')}
+//         accept=".png,.jpg,.jpeg,.svg"
+//       />
+
+//       <button disabled={loading}>
+//         {loading ? 'Сохраняем...' : 'Сохранить'}
+//       </button>
+
+//       {success && <p>{success}</p>}
+//     </form>
+//   )
+// }
+
+
 .form {
   max-width: 400px;
   margin: 2rem auto;

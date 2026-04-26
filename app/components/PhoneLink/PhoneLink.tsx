@@ -14,7 +14,13 @@ export default function PhoneLink() {
 
       <div className={styles.content}>
         <p className={styles.label}>Телефон</p>
-        <p className={styles.value}>235-15-14</p>
+        <a href="tel:+79616385060">
+          <div
+            // disabled={0()}
+            className={styles.value}>
+            <p>+7 961 638 50 60</p>
+          </div>
+        </a>
       </div>
     </a>
   );

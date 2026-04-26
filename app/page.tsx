@@ -128,14 +128,16 @@ export default function Home() {
             Для организаций предлагается питание сотрудников по договору: регулярные поставки готовых обедов или организация питания на территории заказчика.
           </p>
         </section>
-        <main style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "20px", maxWidth: "1500px", margin: "0 auto", marginBottom: "auto" }}>
-          <aside style={{ minWidth: "200px", width: "20%", height: "100%" }}>
+        <main className={styles.main}>
+          <aside className={styles.main__menus_Aside} >
             <Menus />
           </aside>
-          <Content />
-          <aside style={{ minWidth: "300px", width: "27%", height: "100%" }}>
-            <Basket />
-          </aside>
+          <section className={styles.main__section}  >
+            <Content />
+            <aside className={styles.main__basket_Aside}>
+              <Basket />
+            </aside>
+          </section>
         </main>
         <Footer />
       </main >

@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import cyrillicToTranslit from 'cyrillic-to-translit-js'
 
 // Получить все меню
 export const getMenus = async () => {
@@ -24,7 +25,19 @@ export const getMenuById = async (id: string) => {
   return data
 }
 
-// Создать меню (🔥 тут всё: upload + insert)
+// получить сервис по его url_name 
+export const getMenuByUrlName = async (url_name: string) => {
+  const { data, error } = await supabase
+    .from('menus')
+    .select('*')
+    .eq('url_name', url_name)
+    .single() // возвращает один объект
+
+  if (error) throw error
+  return data
+}
+
+// Создать сервис (🔥 тут всё: upload + insert)
 export const createMenu = async ({
   name,
   description,
@@ -35,6 +48,13 @@ export const createMenu = async ({
   file?: File | null
 }) => {
   let imageUrl = ''
+
+  const url_name = cyrillicToTranslit()
+    .transform(name)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '') // убрать спецсимволы
+    .trim()
+    .replace(/\s+/g, '-')
 
   if (file) {
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -60,6 +80,7 @@ export const createMenu = async ({
     .from('menus')
     .insert({
       name,
+      url_name,
       description: description || '',
       image_url: imageUrl
     })
@@ -74,7 +95,7 @@ export const createMenu = async ({
 // обновить 1 меню
 export const updateMenu = async (
   id: string,
-  updates: { name: string; description: string; is_available?: boolean; file?: File }
+  updates: { name: string; url_name?: string, description: string; is_available?: boolean; file?: File }
 ) => {
   let imageUrl: string | undefined
   const { file, ...rest } = updates
