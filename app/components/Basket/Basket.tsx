@@ -275,6 +275,9 @@ const Basket = () => {
     localStorage.setItem("address", value)
     window.dispatchEvent(new Event("addressUpdated"))
   }
+  const changeLs = (value: CartItem[]) => {
+    setLs(value)
+  }
 
 
   const changeDelivery = useCallback((value: boolean) => {
@@ -366,7 +369,7 @@ const Basket = () => {
         address={address}
         changeAddress={changeAddress}
         ls={ls}
-        setLs={setLs}
+        changeLs={changeLs}
         priceDelivery={priceDelivery}
         fullprice={fullprice}
         service={service}

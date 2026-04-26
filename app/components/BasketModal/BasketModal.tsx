@@ -58,6 +58,7 @@ const BasketModal = ({ modalOpen,
   address,
   changeAddress,
   ls,
+  changeLs,
   priceDelivery,
   fullprice,
   service,
@@ -70,7 +71,7 @@ const BasketModal = ({ modalOpen,
   address: string,
   changeAddress: (e: string) => void,
   ls: CartItem[],
-  setLs: (value: CartItem[]) => void,
+  changeLs: (value: CartItem[]) => void,
   priceDelivery: number,
   fullprice: number,
   service: number,
@@ -293,7 +294,7 @@ const BasketModal = ({ modalOpen,
   useEffect(() => {
     const sync = () => {
       const stored = localStorage.getItem("cart")
-      setLs(stored ? JSON.parse(stored) : [])
+      changeLs(stored ? JSON.parse(stored) : [])
     }
 
     // внутри вкладки
