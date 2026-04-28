@@ -67,26 +67,6 @@ export default function Footer() {
       <footer id="contacts" className={styles.footer} aria-label="Футер сайта">
         <div className={styles.footer__wrapper}>
 
-
-          <a
-            href="/reviews"
-            rel=" "
-            target="_blank"
-            className={styles.reviews}
-          >
-
-
-            <Image
-              className={styles.logo}
-              src={stars}
-              alt="rewiews"
-              width={15}
-              height={15}
-            />
-
-
-            <h3 itemProp="copyrightHolder" className={styles.li__name}>Отзывы</h3>
-          </a>
           <div className={styles.footer__left}>
             <a
               href="/reviews"
@@ -119,6 +99,26 @@ export default function Footer() {
 
             <div />
           </div>
+          <a
+            href="/reviews"
+            rel=" "
+            target="_blank"
+            className={styles.reviews}
+          >
+
+
+            <Image
+              className={styles.logo}
+              src={stars}
+              alt="rewiews"
+              width={15}
+              height={15}
+            />
+
+
+            <h3 itemProp="copyrightHolder" className={styles.li__name}>Отзывы</h3>
+          </a>
+
 
 
           <nav className={styles.footer__links} aria-label="Юридическая информация">
