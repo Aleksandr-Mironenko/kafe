@@ -12,7 +12,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.header__wrapper}>
         <nav className={styles.header__nav}>
-          <a href="https://bor-food.ru/">
+          <a href="/">       {/*https://bor-food.ru/ */}
             <Image
               className={styles.header__logo}
               src={logo}

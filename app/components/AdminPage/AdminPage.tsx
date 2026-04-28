@@ -3,11 +3,11 @@
 import Image from 'next/image'
 import pagefood from '../../../public/food-dish-svgrepo-com.svg'
 import Link from 'next/link'
-import styles from './page.module.scss'
+
 import { useRouter } from 'next/navigation'
-
+import ReviewPage from '@/app/components/ReviewPage/ReviewPage'
 // import { useState, useEffect } from 'react'
-
+import styles from './page.module.scss'
 type Menu = {
   url_name: string
   id: string
@@ -28,8 +28,12 @@ type Service = {
   url_name: string
   images: string[]
 }
-
-const AdminPage = ({ menu, services }: { menu: Menu[], services: Service[] }) => {
+type Review = {
+  id: string;
+  image_url: string;
+  created_at: string;
+}
+const AdminPage = ({ menu, services, reviews }: { menu: Menu[], services: Service[], reviews: Review[] }) => {
   const router = useRouter()
 
   return (<>
@@ -222,6 +226,26 @@ const AdminPage = ({ menu, services }: { menu: Menu[], services: Service[] }) =>
         }
       </div >
     </div >
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Отзывы</h1>
+        <Link href={`/admin/reviews/edit`}  // /admin/servises/create
+          className={`${styles.actionButton} ${styles.edit}`}>
+          ✏️Редактировать  отзывы
+        </Link>
+
+      </div>
+
+
+      <ReviewPage reviews={reviews} />
+
+
+
+
+    </div >
+
+
+
   </>
   )
 }

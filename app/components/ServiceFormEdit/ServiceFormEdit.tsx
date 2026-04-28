@@ -79,6 +79,7 @@ export default function ServiceFormEdit({
       formData.append('full_description', data.full_description)
       formData.append('is_available', String(data.is_available))
 
+
       // ➕ новые файлы
       if (data.files?.length) {
         Array.from(data.files).forEach(file => {

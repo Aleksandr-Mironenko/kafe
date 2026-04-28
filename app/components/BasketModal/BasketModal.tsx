@@ -331,7 +331,9 @@ const BasketModal = ({ modalOpen,
       email: emaills ? JSON.parse(emaills) : "",
     }
 
-    if (parsed.address) { setDefaultAddress(parsed.address) }
+    if (parsed.address) {
+      setDefaultAddress(parsed.address)
+    }
     setDefaultName(parsed.name)
     setDefaultPhone(parsed.phone)
     setDefaultEmail(parsed.email)
