@@ -1,9 +1,11 @@
+/* page.module.scss */
+
 .container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9fafb;
   min-height: 100vh;
+  background-color: #f9fafb;
 }
 
 .header {
@@ -13,16 +15,20 @@
   margin-bottom: 24px;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
+.backButton {
+  font-size: 0.9rem;
+  color: #6b7280;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .createButton {
   padding: 8px 16px;
   background-color: #111827;
-  color: #ffffff;
+  color: #fff;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -33,13 +39,42 @@
   }
 }
 
-.flex {
+.dishList {
   display: flex;
-
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
+.dishCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dishImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.dishInfo {
+  flex: 1;
+}
+
+.dishName {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.dishPrice {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
 
 .actionButtons {
   display: flex;

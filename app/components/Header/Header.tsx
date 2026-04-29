@@ -45,7 +45,7 @@ export default function Header() {
           </div>
 
           <div className={styles.header__nav_menu}>
-            <Link href="/services" className={styles.header__nav_link}>
+            <Link href="/posts" className={styles.header__nav_link}>
               Статьи </Link>
           </div>
           <div className={styles.header__nav_menu}>
