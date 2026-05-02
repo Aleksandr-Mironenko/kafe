@@ -1,5 +1,8 @@
 import { getPostByUrlName } from "@/services/postsServise"
 import PostPage from "@/app/components/PostPage/PostPage"
+import { getPublicInfo } from "@/services/publicInfoServise"
+import Header from "@/app/components/Header/Header"
+import Footer from "@/app/components/Footer/Footer"
 
 export const dynamic = "force-dynamic"
 
