@@ -16,6 +16,7 @@ import Basket from '@/app/components/Basket/Basket';
 
 import { getReviews } from '@/services/reviewsServise';
 import ReviewPage from '../components/ReviewPage/ReviewPage';
+import { getPublicInfo } from '@/services/publicInfoServise';
 
 export const dynamic = "force-dynamic"
 
@@ -35,7 +36,7 @@ export default async function MenuPagesClient() {
 
 
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  const publicInfo = await getPublicInfo()
   return (
     <>
       {/* Local Business */}
@@ -124,7 +125,7 @@ export default async function MenuPagesClient() {
           flexDirection: "column",
         }}
       >
-        <Header />
+        <Header publicInfo={publicInfo} />
 
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
           Кафе и услуги питания в Бору — кейтеринг, банкеты, корпоративное питание

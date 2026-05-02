@@ -1,12 +1,13 @@
 import styles from './policy.module.scss'
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import { getPublicInfo } from '@/services/publicInfoServise';
 
 
 export const dynamic = "force-dynamic"
-export default function Home() {
+export default async function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  const publicInfo = await getPublicInfo()
   const text = (
     <div>
       {/* COOKIE POLICY */}
@@ -439,7 +440,7 @@ export default function Home() {
         }}
       >
 
-        <Header />
+        <Header publicInfo={publicInfo} />
 
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
           Кафе и услуги питания в Бору - кейтеринг, банкеты, корпоративное питание

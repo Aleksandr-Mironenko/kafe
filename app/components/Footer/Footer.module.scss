@@ -1,5 +1,5 @@
 .footer {
-  margin-top: auto;
+ 
   position: relative;
   padding: 40px;
   background-color: rgb(238, 225, 206);
@@ -13,6 +13,7 @@
   &__wrapper {
     max-width: 1600px;
     display: flex;
+    flex-wrap: wrap;
     margin: 0 auto;
     justify-content: space-between;
   }
@@ -37,7 +38,7 @@
   }
 
   @media (min-width: 850px) {
-    width: 100vw;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
 
@@ -60,6 +61,12 @@
     }
   }
 
+  &__copyright {
+    &:hover {
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
 }
 
 
@@ -78,5 +85,24 @@
 
     display: none;
 
+  }
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &_block {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+
+
+    align-self: center;
+
+    &:hover {
+      color: rgba(0, 0, 0, 0.6);
+    }
   }
 }

@@ -18,6 +18,7 @@ import Content from '@/app/components/Content/Content';
 import Basket from '@/app/components/Basket/Basket';
 import { getDishes } from "@/services/dishService";
 import { getMenuByUrlName } from "@/services/menuServise"
+import { getPublicInfo } from '@/services/publicInfoServise';
 
 export const dynamic = "force-dynamic"
 type Menu = {
@@ -51,7 +52,7 @@ export default async function MenuPagesClient({ params }: { params: Promise<{ me
 
 
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  const publicInfo = await getPublicInfo()
   return (
     <>
       {/* Local Business */}
@@ -141,7 +142,7 @@ export default async function MenuPagesClient({ params }: { params: Promise<{ me
         }}
       >
 
-        <Header />
+        <Header publicInfo={publicInfo} />
 
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
           Кафе и услуги питания в Бору — кейтеринг, банкеты, корпоративное питание
@@ -170,7 +171,7 @@ export default async function MenuPagesClient({ params }: { params: Promise<{ me
               <Menus />
             </aside>
             <div className={styles.main__content} >
-              <Content dishProps={dishInMenu} menuProps={menuInfo} />
+              <Content dishProps={dishInMenu} menuProps={menuInfo} publicInfo={publicInfo} />
               <aside className={styles.main__basket_Aside}  >
                 <Basket />
               </aside>

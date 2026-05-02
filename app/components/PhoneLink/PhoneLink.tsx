@@ -1,9 +1,9 @@
 import styles from "./PhoneLink.module.scss";
 
-export default function PhoneLink() {
+export default function PhoneLink({ phone }: { phone: string }) {
   return (
     <a
-      href="tel:2351514"
+      href={`tel:${phone}`}
       target="_blank"
       className={styles.link}
     >
@@ -14,11 +14,11 @@ export default function PhoneLink() {
 
       <div className={styles.content}>
         <p className={styles.label}>Телефон</p>
-        <a href="tel:+79616385060">
+        <a href={`tel:${phone}`}>
           <div
             // disabled={0()}
             className={styles.value}>
-            <p>+7 961 638 50 60</p>
+            <p>{phone}</p>
           </div>
         </a>
       </div>

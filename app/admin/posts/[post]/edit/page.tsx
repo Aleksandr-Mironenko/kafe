@@ -1,5 +1,8 @@
+import Footer from "@/app/components/Footer/Footer"
+import Header from "@/app/components/Header/Header"
 import PostFormEdit from "@/app/components/PostFormEdit/PostFormEdit"
 import { getPostByUrlName } from "@/services/postsServise"
+import { getPublicInfo } from "@/services/publicInfoServise"
 
 interface InitialData {
   id: string
@@ -23,5 +26,11 @@ export default async function PostEdit({
 
   const postObj: InitialData = await getPostByUrlName(post)
 
-  return <PostFormEdit postId={postObj.id} initialData={postObj} />
+  const publicInfo = await getPublicInfo()
+
+  return (<>
+    <Header publicInfo={publicInfo} />
+    <PostFormEdit postId={postObj.id} initialData={postObj} />
+    <Footer />
+  </>)
 }

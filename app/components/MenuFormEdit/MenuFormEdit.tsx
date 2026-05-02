@@ -351,6 +351,7 @@ export default function MenuFormEdit({ menuId, initialData }: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <h2 style={{ textAlign: "center" }}><strong>Редактируем меню</strong></h2>
       <div>
         <label className={styles.label}>Название</label>
         <input type="text" {...register('name')} className={styles.input} />

@@ -32,6 +32,7 @@ import Image from "next/image";
 import styles from "./Footer.module.scss";
 import stars from '@/public/star-reviews.svg'
 export default function Footer() {
+
   return (
     <>
       {/* Schema.org Organization — SEO */}

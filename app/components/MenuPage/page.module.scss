@@ -2,10 +2,11 @@
 
 .container {
   max-width: 900px;
-  margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
   background-color: #f9fafb;
+  margin: 20px auto;
+  border-radius: 20px;
 }
 
 .header {
@@ -79,6 +80,7 @@
 .actionButtons {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .actionButton {

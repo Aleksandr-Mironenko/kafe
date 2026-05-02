@@ -6,8 +6,21 @@ import Link from "next/link";
 import WorkingHours from "../WorkingHours/WorkingHours";
 import PhoneLink from "../PhoneLink/PhoneLink";
 import LocationCity from "../LocationCity/LocationCity";
-
-export default function Header() {
+interface PublicInfo {
+  id: string,
+  city: string,
+  address_url: string,
+  phone: string,
+  schedule: string,
+  title: string,
+  content: string,
+  image_url: string,
+  url_link: string,
+  updated_at: string,
+  delivery_payment_title: string,
+  delivery_payment_content: string
+}
+export default function Header({ publicInfo }: { publicInfo: PublicInfo }) {
   return (
     <header className={styles.header}>
       <div className={styles.header__wrapper}>
@@ -34,12 +47,12 @@ export default function Header() {
                 priority
               />
             </a>
-            <WorkingHours />
-            <PhoneLink />
-            <LocationCity />
+            <WorkingHours hours={publicInfo.schedule} />
+            <PhoneLink phone={publicInfo.phone} />
+            <LocationCity city={publicInfo.city} address={publicInfo.address_url} />
           </div>
           <div className={styles.header__nav_menu}>
-            <Link href="/services" className={styles.header__nav_link}>
+            <Link href="/delivery-payment" className={styles.header__nav_link}>
               Доставка и оплата
             </Link>
           </div>
@@ -52,7 +65,9 @@ export default function Header() {
             <Link href="/services" className={styles.header__nav_link}>
               Услуги </Link>
           </div>
-          <div className={styles.header__nav_menu}>
+          <div
+            className={`${styles.header__nav_menu} ${styles.header__nav_menuSearch}`}
+          >
             <input
 
               type="search"
@@ -63,18 +78,18 @@ export default function Header() {
             />
           </div>
           {/* <div className={styles.header__info}>
-            <WorkingHours />
-            <PhoneLink />
-            <LocationCity />
-          </div> */}
-          <div className={`${styles.header__nav_menu} ${styles.header__nav_menuBig}`}>
-            <WorkingHours />
+              <WorkingHours />
+              <PhoneLink />
+              <LocationCity />
+            </div> */}
+          <div className={`${styles.header__nav_menu} ${styles.header__nav_menuBig} ${styles.header__nav_menuSearch}`}>
+            <WorkingHours hours={publicInfo.schedule} />
           </div>
-          <div className={styles.header__nav_menuBig}>
-            <PhoneLink />
+          <div className={`${styles.header__nav_menuBig} ${styles.header__nav_menuSearch}`}>
+            <PhoneLink phone={publicInfo.phone} />
           </div>
-          <div className={styles.header__nav_menuBig}>
-            <LocationCity />
+          <div className={`${styles.header__nav_menuBig} ${styles.header__nav_menuSearch}`}>
+            <LocationCity city={publicInfo.city} address={publicInfo.address_url} />
           </div>
 
 

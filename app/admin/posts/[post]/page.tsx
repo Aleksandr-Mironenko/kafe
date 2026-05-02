@@ -12,5 +12,11 @@ export default async function PostBySlugPage({
 
   const postData = await getPostByUrlName(post)
 
-  return <PostPage post={postData} />
+  const publicInfo = await getPublicInfo()
+
+  return (<>
+    <Header publicInfo={publicInfo} />
+    <PostPage post={postData} />
+    <Footer />
+  </>)
 }

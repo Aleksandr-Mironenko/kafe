@@ -1,6 +1,9 @@
 
 // import MenuFormEdit from "@/app/components/MenuFormEdit/MenuFormEdit";
+import Footer from "@/app/components/Footer/Footer";
+import Header from "@/app/components/Header/Header";
 import ServiceFormEdit from "@/app/components/ServiceFormEdit/ServiceFormEdit";
+import { getPublicInfo } from "@/services/publicInfoServise";
 import { getServiceByUrlName } from "@/services/servicesServise";
 
 
@@ -27,6 +30,12 @@ export default async function ServiceEdit({ params }: { params: Promise<{ servic
 
   const serviceObj: InitialData = await getServiceByUrlName(service);
 
-  return <ServiceFormEdit serviceId={service} initialData={serviceObj} />
+  const publicInfo = await getPublicInfo()
+
+  return (<>
+    <Header publicInfo={publicInfo} />
+    <ServiceFormEdit serviceId={service} initialData={serviceObj} />
+    <Footer />
+  </>)
 }
 

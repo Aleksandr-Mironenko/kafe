@@ -27,8 +27,22 @@ export type Dish = {
   is_available?: boolean
 }
 
+interface PublicInfo {
+  id: string,
+  city: string,
+  address_url: string,
+  phone: string,
+  schedule: string,
+  title: string,
+  content: string,
+  image_url: string,
+  url_link: string,
+  updated_at: string,
+  delivery_payment_title: string,
+  delivery_payment_content: string
+}
 
-export default async function Content({ dishProps, menuProps }: { dishProps?: Dish[], menuProps?: Menu }) {
+export default async function Content({ dishProps, menuProps, publicInfo }: { publicInfo: PublicInfo, dishProps?: Dish[], menuProps?: Menu }) {
   console.log(dishProps)
   let menu: Menu[] = []
   if (menuProps === undefined) {
@@ -48,7 +62,7 @@ export default async function Content({ dishProps, menuProps }: { dishProps?: Di
   }
   return <div className={styles.content}  >
     {(dishProps === undefined) && (<>
-      <ContentInfoBlock />
+      <ContentInfoBlock publicInfo={publicInfo} />
       <div style={{ alignSelf: "center" }}>
         <ContentMenuDishes menu={menu} dishes={dishes} />
       </div>

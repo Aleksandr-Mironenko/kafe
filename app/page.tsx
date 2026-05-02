@@ -14,11 +14,12 @@ import Footer from './components/Footer/Footer';
 import Menus from './components/Menus/Menus';
 import Content from './components/Content/Content';
 import Basket from './components/Basket/Basket';
+import { getPublicInfo } from '@/services/publicInfoServise';
 
 export const dynamic = "force-dynamic"
-export default function Home() {
+export default async function Home() {
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  const publicInfo = await getPublicInfo()
   return (
     <>
       {/* Local Business */}
@@ -108,7 +109,7 @@ export default function Home() {
         }}
       >
 
-        <Header />
+        <Header publicInfo={publicInfo} />
 
         <h1 aria-hidden="false" className={styles.visuallyHidden}>
           Кафе и услуги питания в Бору — кейтеринг, банкеты, корпоративное питание
@@ -133,7 +134,7 @@ export default function Home() {
             <Menus />
           </aside>
           <section className={styles.main__section}  >
-            <Content />
+            <Content publicInfo={publicInfo} />
             <aside className={styles.main__basket_Aside}>
               <Basket />
             </aside>
