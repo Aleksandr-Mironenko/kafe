@@ -1,5 +1,5 @@
   body {
-    overflow-x: none;
+    overflow-y: none;
   }
 
   .visuallyHidden {
@@ -15,6 +15,8 @@
     border: 0;
   }
 
+
+
   .main {
     display: flex;
     flex-direction: column;
@@ -22,8 +24,81 @@
     gap: 10px;
     max-width: 1500px;
     margin: 0 auto;
+    min-width: 620px;
+
+    &__posts {
+      margin-left: 20px;
+
+      &_title {
+        margin-top: 33.5px;
+        font-size: 25px;
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 10px;
 
 
+        @media (max-width: 1018px) {
+          margin-top: 35px;
+
+        }
+
+        @media (max-width: 790px) {
+          margin-top: 34.5px;
+
+        }
+
+        @media (max-width: 780px) {
+          margin-top: 32.5px;
+
+        }
+
+        @media (max-width: 770px) {
+          margin-top: 30.5px;
+
+        }
+
+        @media (max-width: 760px) {
+          margin-top: 28.5px;
+
+        }
+
+        @media (max-width: 750px) {
+          margin-top: 27px;
+
+        }
+
+        @media (max-width: 740px) {
+          margin-top: 26px;
+
+        }
+
+        @media (max-width: 730px) {
+          margin-top: 25px;
+
+        }
+
+        @media (max-width: 720px) {
+          margin-top: 23px;
+
+        }
+
+        @media (max-width: 710px) {
+          margin-top: 22px;
+
+        }
+
+        @media (max-width: 700px) {
+          margin-top: 22px;
+
+        }
+
+
+
+
+
+
+      }
+    }
 
 
     &__content {
@@ -31,7 +106,7 @@
       flex-direction: row;
       justify-content: space-between;
       gap: 10px;
-      // max-width: 1500px;
+      max-width: 1500px;
       margin: 0 auto;
       margin-bottom: 20PX;
 

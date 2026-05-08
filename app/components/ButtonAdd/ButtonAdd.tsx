@@ -11,6 +11,7 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+  slugs: string[]
 }
 type CartItem = Dish & { quantity: number }
 

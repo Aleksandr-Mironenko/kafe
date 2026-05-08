@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createService, updateService, deleteService } from '@/services/servicesServise'
+import { createService, updateService, deleteService, delServiceIdInTableSlug } from '@/services/servicesServise'
 
 export async function POST(req: NextRequest) {
   try {
@@ -115,8 +115,9 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'Service ID is required' }, { status: 400 })
     }
-
+    await delServiceIdInTableSlug(Number(id))
     await deleteService(Number(id))
+
 
     return NextResponse.json({ message: 'Service deleted' }, { status: 200 })
   } catch (err: unknown) {

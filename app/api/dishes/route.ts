@@ -1,6 +1,7 @@
 // app/api/dishes/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { createDish, deleteDish, updateDish } from '@/services/dishService'
+import { createDish, deleteDish, getDishes, updateDish } from '@/services/dishService'
+import { delServiceIdInTableSlug } from '@/services/servicesServise'
 
 
 export type Dish = {
@@ -15,6 +16,19 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+}
+
+export async function GET(req: NextRequest) {
+
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+  try {
+    const dishes = await getDishes(id as string)
+    return NextResponse.json(dishes)
+  } catch (error) {
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
+  }
+
 }
 
 export async function POST(req: NextRequest) {
@@ -50,9 +64,9 @@ export async function PATCH(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'Dish ID required' }, { status: 400 })
     }
-
+    const slugRaw = formData.get('slug')
     const updates = {
-
+      slug: slugRaw ? JSON.parse(slugRaw as string) : undefined,
       menu_id: formData.get('menu_id') as string,
       name: formData.get('name') as string,
       price: Number(formData.get('price')),

@@ -6,6 +6,7 @@ import Link from "next/link";
 import WorkingHours from "../WorkingHours/WorkingHours";
 import PhoneLink from "../PhoneLink/PhoneLink";
 import LocationCity from "../LocationCity/LocationCity";
+import SearchComponent from '../SearchComponent/SearchComponent'
 interface PublicInfo {
   id: string,
   city: string,
@@ -65,17 +66,8 @@ export default function Header({ publicInfo }: { publicInfo: PublicInfo }) {
             <Link href="/services" className={styles.header__nav_link}>
               Услуги </Link>
           </div>
-          <div
-            className={`${styles.header__nav_menu} ${styles.header__nav_menuSearch}`}
-          >
-            <input
-
-              type="search"
-              placeholder="Поиск в меню "
-              autoComplete="off"
-              required
-              className={styles.input}
-            />
+          <div className={`${styles.header__nav_menu} ${styles.header__nav_menuSearch}`} >
+            <SearchComponent />
           </div>
           {/* <div className={styles.header__info}>
               <WorkingHours />

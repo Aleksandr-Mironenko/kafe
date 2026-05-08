@@ -78,7 +78,7 @@ export default function ServicesPage({ services, service }: { services: Service;
 
         ))}
       </Swiper>
-      <Link href={`/admin/services/${services.url_name}/service/${services.id}/edit`} className={`${styles.actionButton} ${styles.edit}`}>
+      <Link href={`/admin/services/${services.url_name}/edit`} className={`${styles.actionButton} ${styles.edit}`}>
         ✏️
       </Link>
 
@@ -95,7 +95,12 @@ export default function ServicesPage({ services, service }: { services: Service;
 
           alert('Сервис удален ')
           // обновляем список без перезагрузки
-          router.refresh()// или лучше обновлять state
+
+          await fetch(`/api/services?id=${services.id}`, {
+            method: 'DELETE'
+          })
+
+          router.push('/admin') //router.refresh()// или лучше обновлять state
         } catch (err: unknown) {
           alert(err instanceof Error ? err.message : 'Ошибка')
         }

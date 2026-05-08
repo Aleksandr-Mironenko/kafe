@@ -12,6 +12,18 @@ export const getMenus = async () => {
   return data
 }
 
+
+export const getMenusBySlug = async (slug: string) => {
+  const { data, error } = await supabase
+    .from('menus')
+    .select('*')
+    .contains('slugs', [slug])
+
+  if (error) throw error
+  return data
+}
+
+
 // получить менб по его id
 
 export const getMenuById = async (id: string) => {
@@ -95,7 +107,7 @@ export const createMenu = async ({
 // обновить 1 меню
 export const updateMenu = async (
   id: string,
-  updates: { name: string; url_name?: string, description: string; is_available?: boolean; file?: File }
+  updates: { name?: string; url_name?: string, description?: string; is_available?: boolean; file?: File, slug?: string[] }
 ) => {
   let imageUrl: string | undefined
   const { file, ...rest } = updates
@@ -121,6 +133,7 @@ export const updateMenu = async (
     .from('menus')
     .update({
       ...rest,
+      ...(updates.slug !== undefined ? { slug: updates.slug } : {}),
       ...(imageUrl ? { image_url: imageUrl } : {}),
     })
     .eq('id', id)

@@ -16,6 +16,7 @@ type Menu = {
   image_url: string | null;
   created_at: string | null;
   is_available: boolean
+  slugs: string[]
 }
 export type Dish = {
   id: string
@@ -29,6 +30,7 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+  slugs: string[]
 }
 type CartItem = Dish & { quantity: number }
 
@@ -94,7 +96,20 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
   }, [menu, dishes])
 
 
+  const initScroll = (id: string) => { //найти место в меню
+    const el = scrollRefs.current[id]
+    if (!el) return
 
+    const right = el.scrollWidth > el.clientWidth
+
+    setScrollState(prev => ({
+      ...prev,
+      [id]: {
+        left: false,
+        right
+      }
+    }))
+  }
 
   const updateCart = (updated: CartItem[]) => {
     localStorage.setItem("cart", JSON.stringify(updated))
@@ -200,94 +215,63 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
       })
 
 
-    return arrDishes.length !== 0 && el.is_available && <li
-      style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }} key={el.id}>
-      <h3 className={styles.menuName} >{el.name}</h3>
-      {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
-      <div style={{
-        position: "relative",
-      }}>
-        {scrollState[el.id]?.left && (<div
-          onClick={() => scrollLeft(el.id)}
-          style={{
-            position: "absolute",
-            left: "30px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: "44px",
-            height: "44px",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            backgroundColor: "black"
-          }}
-        >
-          {"<"}
-        </div>
-        )}
-        <div
-          style={{
-            width: "85%",
-            maxWidth: "1000px", // ограничение
-            minWidth: "300px",
-            overflow: "hidden",
-            margin: "0 auto",
+    return arrDishes.length !== 0 && el.is_available &&
+      <li
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start"
+        }} key={el.id}>
+        <h3 className={styles.menuName} >{el.name}</h3>
+        {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
+        <div className={styles.carousel}>
+          {/* LEFT */}
+          {scrollState[el.id]?.left && (
+            <div
+              onClick={() => scrollLeft(el.id)}
+              className={`${styles.arrow} ${styles['arrow--left']}`}
+            >
+              {'<'}
+            </div>
+          )}
+          <div className={styles.viewport}>
+            <ul
+              ref={(elRef) => {
+                scrollRefs.current[el.id] = elRef
+              }}
+              onScroll={() => checkScroll(el.id)}
+              className={`${styles.noscrollbar} ${styles.list}`}
+            >
+              {arrDishes}
+            </ul>
+          </div>
 
-          }}>
-
-          <ul ref={(el) => {
-            scrollRefs.current[el?.dataset.menuid || ""] = el;
-          }}
-            data-menuid={el.id}
-            onScroll={() => checkScroll(el.id)}
-            className={styles.noscrollbar} style={{
-              listStyleType: "none",
-              display: "flex",
-              gap: "5px",
-              flexDirection: "row",
-              overflowX: "hidden",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              maxWidth: "100%",
-              // justifyContent: "center",
-              alignItems: "center"
-            }}>
-            {arrDishes}
-          </ul>
-
-
-        </div >
-        {scrollState[el.id]?.right && (<div
-          onClick={() => scrollRight(el.id)}
-          style={{
-            position: "absolute",
-            right: "30px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: "44px",
-            height: "44px",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            backgroundColor: "black"
-          }}
-        >
-          {">"}
+          {/* RIGHT */}
+          {scrollState[el.id]?.right && (
+            <div
+              onClick={() => scrollRight(el.id)}
+              className={`${styles.arrow} ${styles['arrow--right']}`}
+            >
+              {'>'}
+            </div>
+          )}
         </div>
 
-        )}
-      </div>
-
-    </li >
+      </li >
 
   })
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      menu.forEach(m => initScroll(m.id))
+    }, 50)
 
-  return <ul style={{ listStyleType: "none", display: "flex", gap: "10px", flexDirection: "column" }}>
-    {ddd}
-  </ul>
+    return () => clearTimeout(timeout)
+  }, [menu, dishes])
+  return <div className={styles.wrapper}><div className={styles.content}><div className={styles.menuSection}>
+    <ul style={{ listStyleType: "none", display: "flex", gap: "10px", flexDirection: "column" }}>
+      {ddd}
+    </ul></div ></div></div>
 }
 export default ContentMenuDishes

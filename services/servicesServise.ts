@@ -63,6 +63,12 @@ export const getServiceById = async (id: number) => {
   }
 }
 
+export const delServiceIdInTableSlug = async (id: number) => {
+  await supabase.rpc('remove_service_from_all', {
+    service_id: id
+  })
+}
+
 // получить сервис по его url_name
 export const getServiceByUrlName = async (url_name: string) => {
   const { data, error } = await supabase

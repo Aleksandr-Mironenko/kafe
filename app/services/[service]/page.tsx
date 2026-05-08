@@ -1,26 +1,18 @@
-
-
-// 👉 тебе нужно:
-
-// Завести карточку в Яндекс Бизнес
-// Привязать к этому же адресу и телефону
-// Добавить сайт
-
-
-
+import { getServiceByUrlName } from "@/services/servicesServise";
+// import AdminPage from "@/app/components/AdminPage/AdminPage";
+import ServisePage from "@/app/components/ServisePage/ServisePage";
+import ServiseUserPage from "@/app/components/ServiseUserPage/ServiseUserPage";
+import { getPublicInfo } from "@/services/publicInfoServise";
 import styles from './pageStyles.module.scss'
 import Header from '@/app/components/Header/Header';
 import Footer from '@/app/components/Footer/Footer';
-// import AdminPage from './admin/page';
-// import PageMain from '@/app/components/PageMain/PageMain';
 import Menus from '@/app/components/Menus/Menus';
-import Content from '@/app/components/Content/Content';
 import Basket from '@/app/components/Basket/Basket';
-import { getDishes } from "@/services/dishService";
-import { getMenuByUrlName } from "@/services/menuServise"
-import { getPublicInfo } from '@/services/publicInfoServise';
-
+import { getMenusBySlug } from "@/services/menuServise";
+import { getDishesBySlug } from "@/services/dishService";
 export const dynamic = "force-dynamic"
+
+
 type Menu = {
   url_name: string;
   id: string;
@@ -31,6 +23,7 @@ type Menu = {
   is_available: boolean
   slugs: string[]
 }
+
 export type Dish = {
   id: string
   menu_id: string
@@ -46,15 +39,35 @@ export type Dish = {
   slugs: string[]
 }
 
-export default async function MenuPagesClient({ params }: { params: Promise<{ menu: string }> }) {
-  const { menu } = await params;
-  console.log(menu, typeof menu)
-  const menuInfo: Menu = await getMenuByUrlName(menu)
-  const dishInMenu = await getDishes(menuInfo.id)
+type Service = {
+  id: number
+  name: string
+  description: string
+  full_description: string
+  is_available: boolean
+  created_at: string | null
+  url_name: string
+  images: string[]
+}
+export default async function MenuServices({ params }: { params: Promise<{ service: string }> }) {
+  const { service } = await params;
 
-
+  const serviceInMenu: Service = await getServiceByUrlName(service)
   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
   const publicInfo = await getPublicInfo()
+  // console.log(publicInfo)
+  const idServiceString = String(serviceInMenu.id)
+
+  const menuAndService = await getMenusBySlug(idServiceString)
+  const ids = menuAndService.map(el => el.id)
+  const dishAndService = await getDishesBySlug(idServiceString, ids)
+
+  console.log("то что я хотел увидеть в строке 64", menuAndService)
+  console.log("то что я хотел увидеть в строке 65", dishAndService)
+
+
+
   return (
     <>
       {/* Local Business */}
@@ -164,97 +177,18 @@ export default async function MenuPagesClient({ params }: { params: Promise<{ me
             Для организаций предлагается питание сотрудников по договору: регулярные поставки готовых обедов или организация питания на территории заказчика.
           </p>
         </section>
-        <main className={styles.main} >
-          <aside className={styles.main__menus_AsideLeft}  >
-            <Menus />
-          </aside>
-          <section className={styles.main__section}  >
-            <aside className={styles.main__menus_Aside}  >
-              <Menus />
-            </aside>
-            <div className={styles.main__content} >
-              <Content dishProps={dishInMenu} menuProps={menuInfo} publicInfo={publicInfo} />
-              <aside className={styles.main__basket_Aside}  >
-                <Basket />
-              </aside>
-            </div>
 
-          </section>
-        </main>
+
+        <ServiseUserPage services={serviceInMenu} menu={menuAndService} dishes={dishAndService} />
+
         <Footer />
       </main >
     </>
   );
 }
-// ✅ Что нужно сделать (обязательно)
-// 🔹 1. Добавить сайт в поисковики
-// Google Search Console
-// Яндекс Вебмастер
-
-// 👉 Там:
-
-// добавить сайт
-// отправить sitemap
-// запросить индексацию
-// 🔹 2. Сделать sitemap.xml
-
-// Пример:
-
-// https://bor-food.ru/sitemap.xml
-// 🔹 3. Проверить robots.txt
-
-// Убедись, что нет:
-
-// Disallow: /
-// 🔹 4. Добавить title и meta
-
-// На главной странице должно быть:
-
-// <title>Bor Food — доставка еды</title>
-// 🔹 5. Добавить упоминания
-
-// Минимум:
-
-// соцсети
-// 2–3 ссылки с других сайтов
-// ⚡ Важный момент про запрос "bor-food"
-
-// Поисковик может:
-
-// воспринимать это как общий текст
-// не связывать с доменом
-
-// 👉 Лучше оптимизировать под:
-
-// bor food
-// бор фуд
-// bor-food доставка
 
 
-
-
-// максимальная ширина 1950
-//ширина основного блока примерно 55- 60%
-//слева 15-17%
-//справа остаток
-// при изменении ширины меняется размер основного блока вбок
-// у основного блока есть минимальный и максимальный размер
-// при его достижении меняется ширина левого меню
-// про достижении определенного размера это меню меняется на меню под шапкой
-// справа корзина 2 состояния доставка и самовывоз
-// туда с локального хранилища - вопрос как рассчитывать
-// переход к оформлению - заполнение формы
-
-
-
-
-
-//  async function translate(text, from = "en", to = "ru") {
-//   const res = await fetch("https://api.mymemory.translated.net/get?q="
-//       + encodeURIComponent(text) + `&langpair=${from}|${to}`);
-
-//   const data = await res.json();
-//   return data.responseData.translatedText;
+// function getDishesBySlugs(service: string, menus: Menu[]): Dish[] | PromiseLike<Dish[]> {
+//   throw new Error("Function not implemented.");
 // }
 
-// translate("Hello world").then(console.log);

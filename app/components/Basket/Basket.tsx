@@ -64,84 +64,9 @@ const Basket = () => {
   const [delivery, setDelivery] = useState<boolean>(false)
   const [address, setAddress] = useState<string>('')
   const [ls, setLs] = useState<CartItem[]>([])
-  // const [isCode, setIsCode] = useState<boolean>(false) //флаг подтверждения
-  // const [lastCode, setLastCode] = useState<boolean>(false)
-  // const [code, setCode] = useState<string>("") //код подтверждения
-  // const [textReaponse, setTextReaponse] = useState<string>("")
-  // const [isFiledCheck, setIsFiledCheck] = useState<'error' | 'noFailed' | 'filledTime' | 'filledCode'>('noFailed') //флаг ошибки при проверке кода
-  // const [trueCode, setTrueCode] = useState<boolean>(false) //верный код подтверждения
-
-  // const { register, handleSubmit, control, formState: { errors }, setValue, getValues, trigger, watch, reset } = useForm<FormValues>({
-  //   resolver: yupResolver(schema),
-  //   mode: "onChange",
-  //   reValidateMode: "onChange",//"onChange",
-  //   criteriaMode: "all",
-  //   shouldUnregister: false,
-  //   defaultValues: {
-
-  //     agree: true,
-  //   },
-  // });
 
   const priceDelivery = 350
-  // const onChangeCode = (value: string): void => {
 
-  //   if (/^\d{0, 4}$/.test(value)) { // разрешаем ввод только до 4 цифр 
-  //     setCode(value);
-  //   }
-  // }
-
-  // const email = getValues("email")
-  // const phone = getValues("phone")
-
-
-  // const checkodeSubmit = async (e: React.FormEvent) => {
-
-  //   e.preventDefault()
-  //   const request = await fetch("/api/auth/check-code", {
-  //     method: "POST", body: JSON.stringify({ code, fromDatabase: "auth_codes" }),
-  //   });
-  //   const responseData = await request.json();
-
-  //   if (responseData.checkCode === undefined) {
-  //     setTrueCode(false);
-  //     setIsFiledCheck('error');
-  //     throw new Error("Ошибка при проверке кода")
-  //   } else if ((responseData.checkCode === false && responseData.timer === false)
-  //     || (responseData.checkCode === true && responseData.timer === false)) {
-  //     setIsFiledCheck('filledTime');
-  //     setTextReaponse(`Срок действия кода истек.
-  //                   Пожалуйста, запросите новый код.`)
-  //   } else if (responseData.checkCode === false && responseData.timer === true) {
-  //     setIsFiledCheck('filledCode');
-  //     setTextReaponse(`Неверный код, попробуйте снова`)
-  //     console.log("код реально не принят")
-  //   }
-  //   else {
-  //     setIsFiledCheck('noFailed');
-  //     console.log("код реально принят")
-  //     setTrueCode(true);
-  //     setTextReaponse("Код принят, продолжите оформления заказа.")
-  //   }
-  // }
-
-
-  // const sendVerificationCode = async (e: React.FormEvent) => {
-  //   e.preventDefault()
-
-  //   const request = await fetch("/api/auth/send-code", {
-  //     method: "POST", body: JSON.stringify({ phone, email, fromDatabase: "auth_codes" }),
-  //   });
-  //   const responseData = await request.json();
-
-  //   if (!responseData.sendCode) {
-  //     throw new Error("Ошибка отправки кода подтверждения")
-
-  //   } else if (responseData.sendCode) {
-  //     setLastCode(responseData.lastCode)
-  //     setIsCode(true);
-  //   }
-  // };
 
   const getCard = () => {
     const stored = localStorage.getItem("cart")
@@ -178,35 +103,6 @@ const Basket = () => {
     }
   }, [])
 
-  // const requiredFields = useWatch({
-  //   control,
-  //   name: [
-  //     "name",
-  //     "phone",
-  //     "email",
-  //     // "agree"
-  //   ],
-  // });
-
-  // const agree = useWatch({ control, name: "agree" });
-
-  // Проверяем, что все обязательные поля заполнены(не пустые) и нет ошибок по ним
-  // const allFieldsFilled = requiredFields.every(v => (typeof v === "string" || typeof v === "number") && String(v).trim() !== "");
-
-
-  // Проверяем, что в errors нет ошибок для обязательных полей
-  // const REQUIRED_FIELDS: (keyof FormValues)[] = [
-  //   "name",
-  //   "phone",
-  //   "email",
-  // ]
-
-  // const noErrorsInRequiredFields = REQUIRED_FIELDS.every(
-  //   field => !errors[field]
-  // );
-
-  // const isFilled = !!(allFieldsFilled && noErrorsInRequiredFields && agree
-  // )
 
   const updateCart = (updated: CartItem[]) => {
     localStorage.setItem("cart", JSON.stringify(updated))
@@ -218,42 +114,6 @@ const Basket = () => {
 
 
 
-
-
-  // const onSubmit = async (data: FormValues) => {
-  //   const formData = new FormData();
-
-  //   formData.append("name", data.name);
-  //   formData.append("phone", `+7${data.phone}`);
-  //   formData.append("email", data.email);
-  //   formData.append("address", address);
-
-  //   formData.append("agree", data.agree ? "1" : "0");
-  //   formData.append("delivery", delivery ? "Доставка" : "Самовывоз");
-  //   formData.append("order", JSON.stringify(ls));
-
-  //   const response = await fetch("/api/send-order", {
-  //     method: "POST", body: formData,
-  //   });
-  //   if (!response.ok) {
-  //     throw new Error("Ошибка отправки")
-
-  //   } else {
-  //     await response.json();
-
-
-
-  //     setValue("name", "")
-  //     setValue("phone", "");
-
-  //     setValue("email", "");
-  //     setValue("agree", true);
-
-
-  //     onClose()//при отправке обнуление очистить поля формы и закрыть ее
-  //   }
-  // };
-
   const fullprice = ls.reduce((acc, el) => {
     return acc + el.price * el.quantity;
   }, 0);
@@ -264,10 +124,6 @@ const Basket = () => {
   const closeModal = useCallback(() => {
     setModalOpen(false);
   }, []);
-
-  // const changeAddress = useCallback((value: string) => {
-  //   setAddress(value);
-  // }, []);
 
 
   const changeAddress = (value: string) => {

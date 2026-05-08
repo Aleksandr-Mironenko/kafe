@@ -34,16 +34,45 @@ interface InitialData {
   create_at: string
   url_name: string
   images: string[]
+  slugs: string[]
+}
+type Menu = {
+  url_name: string;
+  id: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  created_at: string | null;
+  is_available: boolean
+  slugs: string[]
 }
 interface Props {
   serviceId: string
   initialData: InitialData
+  menus: Menu[]
+  id: string
 
+}
+export type Dish = {
+  id: string
+  menu_id: string
+  name: string
+  ingredients?: string
+  short_description?: string
+  full_description?: string
+  weight?: string
+  price?: number
+  image_url?: string
+  order_index?: number
+  is_available?: boolean
+  slugs: string[]
 }
 
 export default function ServiceFormEdit({
   serviceId,
-  initialData
+  initialData,
+  menus,
+  id
 }: Props) {
   const resolver = yupResolver(schema) as Resolver<FormValues>
   const router = useRouter()
@@ -52,6 +81,162 @@ export default function ServiceFormEdit({
   const [images, setImages] = useState(initialData.images)
   const [removedImages, setRemovedImages] = useState<string[]>([])
   const [success, setSuccess] = useState('')
+  const [editDishesInMenu, setEditDishesInMenu] = useState<Dish[]>([])
+  const [openDish, setOpenDish] = useState<boolean>(false)
+
+  const [menusState, setMenusState] = useState<Menu[]>(menus)
+  const [ativeMenuName, setAtiveMenuName] = useState<string>('')
+
+
+  const menu = menusState.map(el => {
+    // console.log(89, Array.isArray(el.slug) && el.slug.map(String).includes(String(id)))
+    // console.log(90, Array.isArray(el.slug))
+    // console.log(91, el.slug)
+    console.log(92, editDishesInMenu)
+    console.log(93)
+    console.log(94)
+    return (
+      <li key={el.id} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+        <label className={styles.toggleSwitch}>
+          <input
+            type="checkbox"
+            checked={
+              Array.isArray(el.slugs) &&
+              el.slugs.map(String).includes(String(id))
+
+            }
+
+            onClick={(e) => e.stopPropagation()}
+            onChange={async (e) => {
+              const newValue = e.target.checked
+
+              try {
+                const currentSlug = Array.isArray(el.slugs) ? el.slugs.map(String) : []
+
+                const updatedSlug = (newValue)
+                  ? [...new Set([...currentSlug, id])]
+                  : (
+                    editDishesInMenu?.[0]?.menu_id === el.id && setEditDishesInMenu([]),
+                    currentSlug.filter((i) => i !== String(id))
+                  )
+
+                // локально обновляем ТОЛЬКО этот элемент
+                setMenusState(prev =>
+                  prev.map(item =>
+                    item.id === el.id
+                      ? { ...item, slugs: updatedSlug }
+                      : item
+                  )
+                )
+
+                const formData = new FormData()
+                formData.append('id', String(el.id))
+                formData.append('slug', JSON.stringify(updatedSlug))
+
+                const res = await fetch('/api/menus/slug', {
+                  method: 'PATCH',
+                  body: formData,
+                })
+
+                const result = await res.json()
+                if (!res.ok) throw new Error(result.error || 'Ошибка обновления')
+
+                // router.refresh()
+              } catch (err: unknown) {
+                alert(err instanceof Error ? err.message : 'Ошибка')
+              }
+            }}
+          />
+
+          <span className={styles.slider}></span>
+        </label>
+        <p>{el.name}</p>
+        {Array.isArray(el.slugs) &&
+          el.slugs.map(String).includes(String(id)) &&
+          <button style={{ fontSize: "0.6em", fontWeight: "700", backgroundColor: "white", padding: "2px 5px", borderRadius: "5px" }}
+            onClick={async (e) => {
+              e.preventDefault()
+              async function fetchDishes(menuId: string) {
+                try {
+                  const response = await fetch(`/api/dishes?id=${menuId}`)
+                  if (!response.ok) {
+                    const errorData = await response.json()
+                    throw new Error(errorData.error || 'Ошибка при получении блюд')
+                  }
+                  const dishes = await response.json()
+                  setEditDishesInMenu(dishes)
+                  setAtiveMenuName(el.name)
+                  setOpenDish(true)
+                } catch (error) {
+                  console.error('Fetch dishes error:', error)
+                  throw error
+                }
+              }
+              await fetchDishes(el.id)
+            }}>
+            выбрать блюда
+          </button>}
+      </li>
+    )
+  })
+
+  const dishesMenu = (editDishesInMenu ?? []).map(el => {
+    return (
+      <li key={el.id} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", justifyContent: "flex-end" }}>
+
+        <p>{el.name}</p>
+        <label className={styles.toggleSwitch}>
+          <input
+            type="checkbox"
+            checked={
+              Array.isArray(el.slugs) &&
+              el.slugs.map(String).includes(String(id))
+
+            }
+
+            onClick={(e) => e.stopPropagation()}
+            onChange={async (e) => {
+              const newValue = e.target.checked
+
+              try {
+                const currentSlug = Array.isArray(el.slugs) ? el.slugs.map(String) : []
+
+                const updatedSlug = newValue
+                  ? [...new Set([...currentSlug, id])]
+                  : currentSlug.filter((i) => i !== id)
+
+                setEditDishesInMenu(prev =>
+                  prev.map(item =>
+                    item.id === el.id
+                      ? { ...item, slugs: updatedSlug }
+                      : item
+                  )
+                )
+                const formData = new FormData()
+                formData.append('id', String(el.id))
+                formData.append('slug', JSON.stringify(updatedSlug))
+
+                const res = await fetch('/api/dishes/slug', {
+                  method: 'PATCH',
+                  body: formData,
+                })
+
+                const result = await res.json()
+                if (!res.ok) throw new Error(result.error || 'Ошибка обновления')
+
+                // router.refresh()
+              } catch (err: unknown) {
+                alert(err instanceof Error ? err.message : 'Ошибка')
+              }
+            }}
+          />
+
+          <span className={styles.slider}></span>
+        </label>
+      </li>
+    )
+  })
+
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver, // ✅ ИЗМЕНЕНИЕ
@@ -112,20 +297,38 @@ export default function ServiceFormEdit({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <h2>Изменение услуги {initialData.name}</h2>
+      <label>
+        <p>Название</p>
+        <input {...register('name')} placeholder="Название" />
+        <p>{errors.name?.message}</p>
+      </label>
 
-      <input {...register('name')} placeholder="Название" />
-      <p>{errors.name?.message}</p>
-
-      <textarea {...register('description')} placeholder="Описание" />
-      <p>{errors.description?.message}</p>
-
-      <textarea {...register('full_description')} placeholder="Полное описание" />
-      <p>{errors.full_description?.message}</p>
-
+      <label>
+        <p>Описание</p>
+        <textarea {...register('description')} placeholder="Описание" />
+        <p>{errors.description?.message}</p>
+      </label>
+      <label>
+        <p>Полное описание</p>
+        <textarea {...register('full_description')} placeholder="Полное описание" />
+        <p>{errors.full_description?.message}</p>
+      </label>
       <label>
         <input type="checkbox" {...register('is_available')} />
         Активен
       </label>
+
+      <div style={{ border: "1px solid rgba(0,0,0,0.2)", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(0,0,0,0.1)" }}>
+        <h3 style={{ textAlign: "center", fontSize: "1.1em" }}>Что будет в меню</h3>
+        <ul>{menu}</ul>
+      </div>
+
+
+      {openDish && dishesMenu.length > 0 && <div style={{ border: "1px solid rgba(0,0,0,0.2)", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(0,0,0,0.1)" }}>
+        <h3 style={{ textAlign: "center", fontSize: "1.1em" }}>Выберите блюда из меню <span style={{ textDecoration: "underline" }}>{ativeMenuName}</span> </h3>
+        <ul>{dishesMenu}</ul>
+      </div>}
 
       {/* 🖼 EXISTING IMAGES */}
       <div className={styles.imagesGrid}>
@@ -151,149 +354,25 @@ export default function ServiceFormEdit({
       </div>
 
       {/* ➕ NEW FILES */}
-      <input
-        type="file"
-        multiple
-        {...register('files')}
-        accept=".png,.jpg,.jpeg,.svg"
-      />
+      <div style={{ display: "flex", flexDirection: "column", border: "1px solid rgba(0,0,0,0.2)", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(0,0,0,0.1)" }}>
+        <p style={{ fontSize: "1.1em" }}>Добавить файлы</p>
+        <input
+          type="file"
+          multiple
+          {...register('files')}
+          accept=".png,.jpg,.jpeg,.svg"
+        />
+      </div>
 
-      <button disabled={loading}>
-        {loading ? 'Сохраняем...' : 'Сохранить'}
+
+
+
+
+      <button style={{ display: "inline-block", fontWeight: "700", margin: "0 auto", padding: "5px 10px", borderRadius: "5px", backgroundColor: "rgba(32, 32, 154, 0.1)" }} disabled={loading}>
+        {loading ? <p style={{ color: "rgba(32, 32, 154, 0.7)" }}> Сохраняем... </p> : <p style={{ color: "black" }}> Сохранить </p>}
       </button>
-
       {success && <p>{success}</p>}
-    </form>
+    </form >
+
   )
-}
-// 'use client'
-// import { useState } from 'react'
-// import { useForm } from 'react-hook-form'
-// import { yupResolver } from '@hookform/resolvers/yup'
-// import * as yup from 'yup'
-// import styles from './MenuForm.module.scss'
-// import { useRouter } from 'next/navigation'
-
-
-// type FormValues = {
-//   name: string
-//   description: string
-//   full_description: string
-//   files: FileList
-//   is_available: boolean
-
-// }
-
-// const schema = yup.object({
-//   name: yup.string().required('Название меню обязательно'),
-//   description: yup.string().required('Описание обязательно'),
-//   full_description: yup.string().required('Полное описание обязательно'),
-//   is_available: yup.boolean().default(false),
-//   files: yup
-//     .mixed<FileList>()
-//     .required('Выберите изображения')
-//     .test('fileType', 'Допустимые форматы: svg, png, jpeg, jpg', (value) => {
-//       if (!value || value.length === 0) return false
-
-//       const allowed = ['image/png', 'image/jpeg', 'image/svg+xml']
-
-//       return Array.from(value).every(file => allowed.includes(file.type))
-//     })
-// }).required()
-
-// export default function ServiceFormEdit(
-//   // { onSuccess }: { onSuccess?: () => void }
-// ) {
-//   const router = useRouter()
-//   const [loading, setLoading] = useState(false)
-//   const [success, setSuccess] = useState('')
-
-//   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
-//     resolver: yupResolver(schema),
-//     defaultValues: {
-//       is_available: false
-//     }
-//   })
-
-//   const onSubmit = async (data: FormValues) => {
-//     setLoading(true)
-//     setSuccess('')
-
-//     try {
-
-//       const files = data.files
-//       const formData = new FormData()
-//       formData.append('name', data.name)
-//       formData.append('description', data.description)
-//       formData.append('full_description', data.full_description)
-//       formData.append('is_available', String(data.is_available))
-//       Array.from(files).forEach(file => {
-//         formData.append('files', file)
-//       })
-//       const res = await fetch('/api/services', {
-//         method: 'POST',
-//         body: formData
-//       })
-
-//       const result = await res.json()
-//       if (!res.ok) throw new Error(result.error || 'Ошибка создания сервиса')
-
-//       setSuccess('Сервис успешно создано!')
-//       reset()
-//       // onSuccess?.()
-//       router.push(`/admin`)
-
-//     } catch (err: unknown) {
-//       const message = err instanceof Error ? err.message : 'Неизвестная ошибка'
-//       alert(message)
-//     } finally {
-//       setLoading(false)
-//     }
-//   }
-
-//   return (
-//     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-//       <div>
-//         <label className={styles.label}>Название</label>
-//         <input type="text" {...register('name')} className={styles.input} />
-//         <p className={styles.error}>{errors.name?.message}</p>
-//       </div>
-
-//       <div>
-//         <label className={styles.label}>Описание</label>
-//         <textarea {...register('description')} className={styles.textarea} />
-//         <p className={styles.error}>{errors.description?.message}</p>
-//       </div>
-
-//       <div>
-//         <label className={styles.label}>Полное описание</label>
-//         <textarea {...register('full_description')} className={styles.textarea} />
-//         <p className={styles.error}>{errors.description?.message}</p>
-//       </div>
-
-
-//       <label className={styles.toggleSwitch}>
-//         <input type="checkbox" {...register('is_available')} />
-//         <span className={styles.slider}></span>
-//       </label>
-
-//       <div>
-//         <label className={styles.label}>Изображение</label>
-//         <input
-//           type="file"
-//           multiple
-//           {...register('files')}
-//           accept=".svg,.png,.jpeg,.jpg"
-//           className={styles.fileInput}
-//         />
-//         <p className={styles.error}>{errors.files?.message}</p>
-//       </div>
-
-//       <button type="submit" disabled={loading} className={styles.button}>
-//         {loading ? 'Создание...' : 'Создать сервис'}
-//       </button>
-
-//       {success && <p className={styles.success}>{success}</p>}
-//     </form>
-//   )
-// }
+} 

@@ -13,6 +13,7 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+  slug: string[]
 }
 
 // Получить блюда
@@ -38,6 +39,94 @@ export const getDishById = async (id: string) => {
   if (error) throw error
   return data
 }
+
+
+export async function searchDishes(query: string): Promise<Dish[]> {
+  if (!query.trim()) return []
+
+  // ---------------------------
+  // 1. Поиск по названию
+  // ---------------------------
+  const { data: dishesByName, error: nameError } = await supabase
+    .from("dishes")
+    .select(`*`)
+    .ilike("name", `%${query}%`)
+    .eq("is_available", true)
+    .limit(10)
+
+  if (nameError) {
+    throw nameError
+  }
+
+  // ---------------------------
+  // 2. Поиск по ингредиентам
+  // ---------------------------
+  const { data: dishesByIngredients, error: ingredientError } =
+    await supabase
+      .from("dishes")
+      .select(`*`)
+      .ilike("ingredients", `%${query}%`)
+      .eq("is_available", true)
+      .limit(10)
+
+  if (ingredientError) {
+    throw ingredientError
+  }
+
+  // ---------------------------
+  // 3. Объединение без дублей
+  // ---------------------------
+  const uniqueMap = new Map<string, Dish>()
+
+  dishesByName?.forEach((dish) => {
+    uniqueMap.set(dish.id, dish)
+  })
+
+  dishesByIngredients?.forEach((dish) => {
+    if (!uniqueMap.has(dish.id)) {
+      uniqueMap.set(dish.id, dish)
+    }
+  })
+
+  return Array.from(uniqueMap.values())
+}
+// export const getDishesBySlug = async (slug: string, menu_ids: string[]) => {
+//   if (!menu_ids.length) return []
+
+//   const { data, error } = await supabase
+//     .from('dishes')
+//     .select('*')
+//     .contains('slugs', [slug]) // ← исправлено
+//     .in('menu_id', menu_ids)
+
+//   if (error) throw error
+
+//   const grouped = data.reduce((acc, dish) => {
+//     const key = `${dish.menu_id}-${dish.price}`
+
+//     if (!acc[key]) acc[key] = []
+//     acc[key].push(dish)
+
+//     return acc
+//   }, {} as Record<string, Dish[]>)
+
+//   return grouped
+// }
+
+export const getDishesBySlug = async (slug: string, menu_ids: string[]) => {
+  if (!menu_ids.length) return []
+
+  const { data, error } = await supabase
+    .from('dishes')
+    .select('*')
+    .contains('slugs', [slug])
+    .in('menu_id', menu_ids)
+
+  if (error) throw error
+
+  return data // ← просто массив
+}
+
 
 // Получить блюдо по URL
 export const getDishByUrl = async (url_name: string) => {
@@ -137,6 +226,7 @@ export const updateDish = async (
     weight?: string
     price?: number
     file?: File | null
+    slug?: string[]
     is_available?: boolean
   }
 ) => {
@@ -167,6 +257,7 @@ export const updateDish = async (
     .from('dishes')
     .update({
       ...rest,
+      ...(updates.slug !== undefined ? { slug: updates.slug } : {}),
       ...(imageUrl ? { image_url: imageUrl } : {}),
     })
     .eq('id', id)

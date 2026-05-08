@@ -14,14 +14,14 @@ export default function PhoneLink({ phone }: { phone: string }) {
 
       <div className={styles.content}>
         <p className={styles.label}>Телефон</p>
-        <a href={`tel:${phone}`}>
+        <a style={{ display: "block" }} href={`tel:${phone}`}>
           <div
             // disabled={0()}
             className={styles.value}>
             <p>{phone}</p>
           </div>
         </a>
-      </div>
-    </a>
+      </div >
+    </a >
   );
 }

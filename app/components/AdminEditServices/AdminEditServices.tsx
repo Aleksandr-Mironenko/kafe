@@ -1,7 +1,8 @@
-
+"use client"
 import styles from './AdminEditServices.module.scss'
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Service {
   id: number
@@ -13,10 +14,48 @@ interface Service {
   url_name: string
   images: string[]
 }
-
+type Menu = {
+  url_name: string;
+  id: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  created_at: string | null;
+  is_available: boolean
+  slug: string[]
+}
+export type Dish = {
+  id: string
+  menu_id: string
+  name: string
+  ingredients: string
+  short_description?: string
+  full_description?: string
+  weight?: string
+  price: number
+  image_url?: string
+  order_index?: number
+  is_available?: boolean
+  slug: string[]
+}
 
 const AdminEditServices = ({ services, }: { services: Service[] }) => {
   const router = useRouter()
+  // const [menus, setMenus] = useState<Menu[]>([])
+  // const [dishesMap, setDishesMap] = useState<Record<string, Dish[]>>({})
+  // const [openedMenus, setOpenedMenus] = useState<Record<string, boolean>>({})
+  // useEffect(() => {
+  //   const loadMenus = async () => {
+  //     const res = await fetch('/api/menus')
+  //     const data = await res.json()
+  //     setMenus(data)
+  //   }
+
+  //   loadMenus()
+  // }, [])
+
+  ////////////////////////////
+
 
   return (
     <>

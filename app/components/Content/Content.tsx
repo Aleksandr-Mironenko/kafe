@@ -12,6 +12,7 @@ type Menu = {
   image_url: string | null;
   created_at: string | null;
   is_available: boolean
+  slugs: string[]
 }
 export type Dish = {
   id: string
@@ -25,6 +26,7 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+  slugs: string[]
 }
 
 interface PublicInfo {
