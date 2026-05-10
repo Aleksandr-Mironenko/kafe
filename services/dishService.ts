@@ -44,9 +44,6 @@ export const getDishById = async (id: string) => {
 export async function searchDishes(query: string): Promise<Dish[]> {
   if (!query.trim()) return []
 
-  // ---------------------------
-  // 1. Поиск по названию
-  // ---------------------------
   const { data: dishesByName, error: nameError } = await supabase
     .from("dishes")
     .select(`*`)
@@ -58,9 +55,7 @@ export async function searchDishes(query: string): Promise<Dish[]> {
     throw nameError
   }
 
-  // ---------------------------
-  // 2. Поиск по ингредиентам
-  // ---------------------------
+
   const { data: dishesByIngredients, error: ingredientError } =
     await supabase
       .from("dishes")

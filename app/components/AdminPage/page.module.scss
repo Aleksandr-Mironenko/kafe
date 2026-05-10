@@ -11,3 +11,26 @@
     transform: scale(0.98);
   }
 }
+
+.wrapper {
+
+  width: 100%;
+
+  min-width: 626px;
+  // position: relative;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.logout {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 5
+}

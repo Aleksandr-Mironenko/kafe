@@ -41,13 +41,14 @@ export type Dish = {
   name: string
   ingredients: string
   short_description?: string
-  full_description?: string
+  full_description: string
   weight?: string
   price: number
   image_url?: string
   order_index?: number
   is_available?: boolean
   slugs: string[]
+  url_name: string
 }
 
 
@@ -64,20 +65,6 @@ type CartItem = Dish & { quantity: number }
 export default function ServiseUserPage({ services, menu, dishes }: { services: Service, menu: Menu[], dishes: Dish[] }) {
 
   const router = useRouter()
-  // const [service, setService] = useState<Service>({
-  // id: 0,
-  //   name: "",
-  //     description: "",
-  //       full_description: "",
-  //         is_available: true,
-  //           created_at: "",
-  //             url_name: "",
-  //               images: [""],
-  // })
-  // useEffect(() => {
-  //   setService(services)
-  // }, [services])
-
 
 
   const [ls, setLs] = useState<CartItem[]>([])
@@ -388,7 +375,7 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
       {/* CONTENT */}
       <div className={styles.content}>
         <div className={styles.topBlock}>
-          <p>{services.description}</p>
+          <p className={styles.topBlock_text}>{services.description}</p>
           <button className={styles.cta}>Заказать сейчас →</button>
         </div>
 

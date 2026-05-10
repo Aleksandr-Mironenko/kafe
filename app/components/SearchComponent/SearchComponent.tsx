@@ -47,20 +47,6 @@ export default function SearchComponent() {
     fetchDishes()
   }, [debouncedSearch])
 
-
-  //   return ( 
-  //     <input
-
-  //       type="search"
-  //       placeholder="Поиск в меню "
-  //       autoComplete="off"
-  //       required
-  //       value={searchState}
-  //       onChange={(e) => setSearchState(e.target.value)}
-  //       className={styles.input}
-  //     />
-  //   </div>)
-  // }
   return (
     <div className={styles.wrapper}>
       <input

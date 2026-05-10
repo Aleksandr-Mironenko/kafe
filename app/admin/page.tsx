@@ -15,17 +15,14 @@ export default async function Admin() {
   const reviews = await getReviews() // получу все отзывы и передам на отображение
   const posts = await getPosts() // получу все посты и передам на отображение
   const publicInfo = await getPublicInfo() //все публичные поля которые потом можно легко поменять
-  console.log('services', services)
-  console.log('menu', menu)
-  console.log('reviews', reviews)
-  console.log('posts', posts)
-  console.log('publicInfo', publicInfo)
 
 
 
   return (<>
     <Header publicInfo={publicInfo} />
-    <AdminPage menu={menu} services={services} reviews={reviews} posts={posts} publicInfo={publicInfo} />
+    <div style={{ minHeight: "76vh" }}>
+      <AdminPage menu={menu} services={services} reviews={reviews} posts={posts} publicInfo={publicInfo} />
+    </div>
     <Footer />
   </>)
 }

@@ -4,6 +4,7 @@ import ContentInfoBlock from "../ContentInfoBlock/ContentInfoBlock"
 import ContentOneMenuDishes from "../ContentOneMenuDishes/ContentOneMenuDishes"
 import ContentMenuDishes from "@/app/components/ContentMenuDishes/ContentMenuDishes"
 import styles from "./Content.module.scss"
+import Basket from "../Basket/Basket"
 type Menu = {
   url_name: string;
   id: string;
@@ -26,6 +27,7 @@ export type Dish = {
   image_url?: string
   order_index?: number
   is_available?: boolean
+  url_name: string
   slugs: string[]
 }
 
@@ -62,18 +64,26 @@ export default async function Content({ dishProps, menuProps, publicInfo }: { pu
   } else {
     dishes = [...dishes, ...dishProps]
   }
-  return <div className={styles.content}  >
+  return <div className={dishProps !== undefined ? styles.content : styles.content1}>
     {(dishProps === undefined) && (<>
-      <ContentInfoBlock publicInfo={publicInfo} />
-      <div style={{ alignSelf: "center" }}>
-        <ContentMenuDishes menu={menu} dishes={dishes} />
-      </div>
 
-    </>)
+      <ContentInfoBlock publicInfo={publicInfo} />
+
+
+      <ContentMenuDishes menu={menu} dishes={dishes} />
+    </>
+
+
+    )
     }
-    <div style={{ alignSelf: "center" }}>
-      <ContentOneMenuDishes menu={menu} dishes={dishes} />
-    </div>
+    {
+      dishProps && <div style={{ alignSelf: "center", }}>
+        <ContentOneMenuDishes menu={menu} dishes={dishes} />
+      </div>
+    }
   </div >
 }
+
+
+
 

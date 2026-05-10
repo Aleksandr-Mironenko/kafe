@@ -74,10 +74,6 @@ const ContentOneMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }
   }, [])
 
 
-
-
-
-
   const updateCart = (updated: CartItem[]) => {
     localStorage.setItem("cart", JSON.stringify(updated))
     window.dispatchEvent(new Event("cartUpdated"))
@@ -96,77 +92,6 @@ const ContentOneMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }
     const filteredDishes = dishes.filter((dish: Dish) =>
       dish.menu_id === el.id && dish.is_available);
 
-    // const arrDishes =
-    //   filteredDishes.map((dish: Dish) => {
-    //     const quantity = ls.find(el => el.id === dish.id)?.quantity || 0
-
-    //     return (
-    //       <li className={styles.card} key={dish.id}>
-    //         <p style={{ margin: "0 auto", fontSize: "20px" }}>{dish.name}</p>
-    //         <div style={{ display: "flex", flexDirection: "row" }}>
-    //           <div style={{ position: "relative" }}>
-    //             {dish.image_url &&
-    //               <div style={{ height: "100px", width: "100px" }}>
-    //                 <Image
-    //                   // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-    //                   className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
-    //                   width={100}
-    //                   height={100}
-    //                   src={dish.image_url}
-    //                   alt={dish.name} />
-    //               </div>
-    //             }
-    //             {quantity !== 0 && (
-    //               <div
-    //                 style={{
-    //                   position: "absolute",
-    //                   top: "50%",
-    //                   left: "50%",
-    //                   transform: "translate(-50%, -60%)",
-    //                   width: "60px",
-    //                   height: "60px",
-    //                   display: "flex",
-    //                   alignItems: "center",
-    //                   justifyContent: "center",
-    //                   borderRadius: "50%",
-    //                   background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
-    //                   color: "black",
-    //                   fontWeight: 700,
-    //                   fontSize: "40px"
-    //                 }}
-    //               >
-    //                 {ls.find(el => el.id === dish.id)?.quantity || ""}
-    //               </div>
-    //             )}
-
-
-    //             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-
-    //             </div>
-    //           </div>
-    //           <div style={{ width: "100px", fontSize: "14px", marginTop: "5px" }}>
-    //             <p style={{ textAlign: "right" }}>{dish.weight} гр.</p>
-    //             <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
-    //           </div>
-
-    //         </div>
-    //         <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-    //           {quantity !== 0 ?
-    //             <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>
-
-    //               <ButtonDel dish={dish} ls={ls} updateCart={updateCart} />
-
-    //               <p>{dish.price} ₽</p>
-    //               <ButtonAdd dish={dish} updateCart={updateCart} marker={"+"} />
-    //             </div>
-    //             :
-    //             <p>{dish.price} ₽</p>
-    //           }
-    //           {quantity === 0 && <ButtonAdd dish={dish} updateCart={updateCart} marker={"Добавить"} />}
-    //         </div>
-    //       </li >
-    //     )
-    //   })
     const arrDishes =
       filteredDishes.map((dish: Dish) => {
         const quantity = ls.find(el => el.id === dish.id)?.quantity || 0
@@ -238,7 +163,14 @@ const ContentOneMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }
       })
 
     return (arrDishes.length !== 0 && el.is_available) ? <li
-      style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }} key={el.id}>
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+      key={el.id}>
       <h3 className={styles.menuName}  >{el.name}</h3>
       {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
       <div style={{

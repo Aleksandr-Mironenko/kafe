@@ -14,6 +14,7 @@ import AdminEditServices from '@/app/components/AdminEditServices/AdminEditServi
 import AdminEditReviews from '@/app/components/AdminEditReviews/AdminEditReviews'
 import AdminEditPosts from '../AdminEditPosts/AdminEditPosts'
 import AdminEditPublicInfo from '../AdminEditPublicInfo/AdminEditPublicInfo'
+import LogoutButton from '../LogoutButton/LogoutButton'
 
 interface Menu {
   url_name: string
@@ -67,26 +68,53 @@ interface PublicInfo {
 
 
 const AdminPage = ({ menu, services, reviews, posts, publicInfo }: { menu: Menu[], services: Service[], reviews: Review[], posts: Post[], publicInfo: PublicInfo }) => {
-  const [open, setOpen] = useState<'menu' | 'services' | 'reviews' | 'posts' | 'publicInfo' | null>(null)
+  const [open, setOpen] = useState<'menu' | 'services' | 'reviews' | 'posts' | 'publicInfo' | null>("publicInfo")
   return (
     <>
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '24px', alignItems: 'center', justifyContent: 'center', margin: "10px 30px" }}>
-        <button onClick={() => setOpen('menu')} className={styles.createButton}>
+
+
+      <div className={styles.wrapper}>
+        <button
+          onClick={() => setOpen('menu')}
+          className={styles.createButton}
+        >
           Редактировать меню
         </button>
-        <button onClick={() => setOpen('services')} className={styles.createButton}>
+
+        <button
+          onClick={() => setOpen('services')}
+          className={styles.createButton}
+        >
           Редактировать услуги
         </button>
-        <button onClick={() => setOpen('reviews')} className={styles.createButton}>
+
+        <button
+          onClick={() => setOpen('reviews')}
+          className={styles.createButton}
+        >
           Редактировать отзывы
         </button>
-        <button onClick={() => setOpen('posts')} className={styles.createButton}>
+
+        <button
+          onClick={() => setOpen('posts')}
+          className={styles.createButton}
+        >
           Редактировать посты
         </button>
-        <button onClick={() => setOpen('publicInfo')} className={styles.createButton}>
+
+        <button
+          onClick={() => setOpen('publicInfo')}
+          className={styles.createButton}
+        >
           Редактировать публичную информацию
         </button>
+
+        <div className={styles.logout}>
+          <LogoutButton />
+        </div>
       </div>
+
+
 
       {open === 'menu' && < AdminEditMenu menu={menu} />}
       {open === 'services' && < AdminEditServices services={services} />}

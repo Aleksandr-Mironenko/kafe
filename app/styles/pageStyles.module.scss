@@ -1,3 +1,55 @@
+  // body {
+  //   overflow-x: none;
+  // }
+
+  // .visuallyHidden {
+  //   position: absolute;
+  //   width: 1px;
+  //   height: 1px;
+  //   padding: 0;
+  //   margin: -1px;
+  //   overflow: hidden;
+  //   clip: rect(0 0 0 0);
+  //   clip-path: inset(50%);
+  //   white-space: nowrap;
+  //   border: 0;
+  // }
+
+  // .main {
+  //   display: flex;
+  //   flex-direction: row;
+  //   justify-content: space-between;
+  //   gap: 10px;
+  //   max-width: 1500px;
+  //   margin: 0 auto;
+  //   margin-bottom: auto;
+
+  //   &__menus_Aside {
+  //     min-width: 200px;
+  //     width: 20%;
+  //     height: 100%;
+  //     margin-left: 15px;
+  //   }
+
+  //   &__section {
+  //     display: flex;
+  //     flex-direction: row;
+  //     justify-content: space-between;
+  //     gap: 10px;
+  //     max-width: 1500px;
+  //     margin: 0 auto;
+  //     margin-bottom: auto;
+  //   }
+
+  //   &__basket_Aside {
+  //     min-width: 300px;
+  //     width: 20%;
+  //     height: 100%;
+  //     margin-right: 15px;
+  //   }
+  // }
+
+
   body {
     overflow-x: none;
   }
@@ -16,30 +68,53 @@
   }
 
   .main {
+    min-width: 626px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     gap: 10px;
-    max-width: 1500px;
-    margin: 0 auto;
-    margin-bottom: auto;
+    // max-width: 1500px;
+    margin: 0 auto 20px;
+    width: 90%;
 
-    &__menus_Aside {
+
+
+    &__content {
+      display: flex;
+      gap: 10px;
+
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    &__menus_AsideLeft {
       min-width: 200px;
-      width: 20%;
       height: 100%;
       margin-left: 15px;
+
+      @media (min-width: 1019px) {
+        display: none;
+      }
+    }
+
+    &__menus_Aside {
+      min-width: 250px;
+      width: 250px;
+      height: 100%;
+      margin-left: 15px;
+
+      @media (max-width: 1018px) {
+        display: none;
+      }
     }
 
     &__section {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
       gap: 10px;
-      max-width: 1500px;
-      margin: 0 auto;
-      margin-bottom: auto;
-      min-width: 0
+
+      width: 100%;
+      min-width: 0;
     }
 
     &__basket_Aside {

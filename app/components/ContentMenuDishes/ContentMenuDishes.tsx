@@ -8,6 +8,7 @@ import Image from "next/image"
 // import ButtonDelete from "../ButtonDelete/ButtonDelete";
 import { useState, useEffect, useRef } from "react";
 import styles from "./ContentMenuDishes.module.scss"
+import Link from "next/link";
 type Menu = {
   url_name: string;
   id: string;
@@ -20,11 +21,12 @@ type Menu = {
 }
 export type Dish = {
   id: string
+  url_name: string
   menu_id: string
   name: string
   ingredients: string
   short_description?: string
-  full_description?: string
+  full_description: string
   weight?: string
   price: number
   image_url?: string
@@ -150,63 +152,46 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
 
         return (
           <li className={styles.card} key={dish.id}>
+            <Link href={`/dish/${dish.url_name}`} >
+              <div className={styles.card__wrapper} >
+                <div className={styles.card__wrapperblock} >  {/*картинка со счетчиком */}
+                  {dish.image_url &&
+                    <Image
+                      className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
+                      fill
+                      src={dish.image_url}
+                      alt={dish.name} />
+                    // </div>
+                  }
+                  {quantity !== 0 && (
+                    <div className={styles.card__quantity}
+                    >
+                      {ls.find(el => el.id === dish.id)?.quantity || ""}
+                    </div>
+                  )}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
-                {dish.image_url &&
-                  // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
-                  <Image
-                    // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-                    className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
-                    fill
-                    src={dish.image_url}
-                    alt={dish.name} />
-                  // </div>
-                }
-                {quantity !== 0 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -60%)",
-                      width: "60px",
-                      height: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
-                      color: "black",
-                      fontWeight: 700,
-                      fontSize: "40px"
-                    }}
-                  >
-                    {ls.find(el => el.id === dish.id)?.quantity || ""}
-                  </div>
-                )}
+                </div>
+                <p className={styles.dish__name}>{dish.name}</p>
 
-              </div>
-              <p className={styles.dish__name}>{dish.name}</p>
+                <div className={styles.dish__haracteristic} > {/*текст ингридиенты, грамовка и тд*/}
+                  <p className={styles.dish__ingredients}   >{correctText(dish.ingredients, 30)}</p>
+                  <p className={styles.dish__weight}  >{dish.weight} гр.</p>
 
-              <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
-                <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
-                <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
+                </div>
 
-              </div>
-
-            </div >
-            <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+              </div >
+            </Link >
+            <div className={styles.dish__down}  >
               {quantity !== 0 ?
-                <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>
+                <div className={styles.dish__quantity} >
                   {quantity !== 0 &&
                     <ButtonDel dish={dish} ls={ls} updateCart={updateCart} />
                   }
-                  <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price} ₽</p>
+                  <p className={styles.dish__priceString}  >{dish.price} ₽</p>
                   <ButtonAdd dish={dish} updateCart={updateCart} marker={"+"} />
                 </div>
                 :
-                <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price}  ₽</p>
+                <p className={styles.dish__priceString}>{dish.price}  ₽</p>
               }
               {quantity === 0 && <ButtonAdd dish={dish} updateCart={updateCart} marker={"Добавить"} />}
             </div>
@@ -216,16 +201,9 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
 
 
     return arrDishes.length !== 0 && el.is_available &&
-      <li
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start"
-        }} key={el.id}>
+      <li className={styles.dish__el}
+        key={el.id}>
         <h3 className={styles.menuName} >{el.name}</h3>
-        {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
         <div className={styles.carousel}>
           {/* LEFT */}
           {scrollState[el.id]?.left && (
@@ -269,9 +247,15 @@ const ContentMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }) =
 
     return () => clearTimeout(timeout)
   }, [menu, dishes])
-  return <div className={styles.wrapper}><div className={styles.content}><div className={styles.menuSection}>
-    <ul style={{ listStyleType: "none", display: "flex", gap: "10px", flexDirection: "column" }}>
+  return (
+    // <div className={styles.content}>
+    //   <div className={styles.menuSection}>
+    <ul className={styles.listMenu} >
       {ddd}
-    </ul></div ></div></div>
+    </ul>
+    //   </div >
+    // </div>
+  )
+
 }
 export default ContentMenuDishes
