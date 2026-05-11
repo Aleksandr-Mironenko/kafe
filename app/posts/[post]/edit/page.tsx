@@ -16,6 +16,7 @@ interface InitialData {
   create_at: string
   url_name: string
   images: string[]
+  slugs: string[]
 }
 interface Props {
   serviceId: string
@@ -34,8 +35,15 @@ export default async function ServiceEdit({ params }: { params: Promise<{ servic
 
   return (<>
     <Header publicInfo={publicInfo} />
-    <ServiceFormEdit serviceId={service} initialData={serviceObj} />
+    <ServiceFormEdit serviceId={service} initialData={serviceObj} menus={[]} id={String(0)} />
     <Footer />
   </>)
 }
 
+
+
+
+// const menus: Menu[] = await getMenus()
+// const serviceObj: InitialData = await getServiceByUrlName(service);
+
+// return <ServiceFormEdit serviceId={service} initialData={serviceObj} menus={menus} id={String(serviceObj.id)} />

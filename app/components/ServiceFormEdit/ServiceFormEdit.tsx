@@ -35,6 +35,7 @@ interface InitialData {
   url_name: string
   images: string[]
   slugs: string[]
+
 }
 type Menu = {
   url_name: string;
