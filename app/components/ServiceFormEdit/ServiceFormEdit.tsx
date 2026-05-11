@@ -298,7 +298,7 @@ export default function ServiceFormEdit({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <h2>Изменение услуги {initialData.name}</h2>
+      <h2><strong>Изменение услуги {initialData.name}</strong></h2>
       <label>
         <p>Название</p>
         <input {...register('name')} placeholder="Название" />

@@ -218,51 +218,53 @@ export default function ReviewFormEdit({ initialData }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <Link href="/admin" className={styles.backButton}>
-        ← Назад
-      </Link>
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <Link href="/admin" className={styles.backButton}>
+          ← Назад
+        </Link>
 
-      <h2 className={styles.title}>
-        Удалить и добавить скриншоты
-      </h2>
+        <h2 className={styles.title}>
+          Удалить и добавить скриншоты
+        </h2>
 
-      {/* 🖼 EXISTING IMAGES */}
-      <div className={styles.imagesGrid}>
-        {images.map(img => (
-          <div key={img.id} className={styles.imageItem}>
-            <Image
-              src={img.image_url}
-              alt={`review-${img.id}`}
-              width={120}
-              height={100}
-              className={styles.img}
-            />
+        {/* 🖼 EXISTING IMAGES */}
+        <div className={styles.imagesGrid}>
+          {images.map(img => (
+            <div key={img.id} className={styles.imageItem}>
+              <Image
+                src={img.image_url}
+                alt={`review-${img.id}`}
+                width={120}
+                height={100}
+                className={styles.img}
+              />
 
-            <button
-              type="button"
-              onClick={() => handleRemoveImage(img.image_url)}
-              className={styles.deleteBtn}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(img.image_url)}
+                className={styles.deleteBtn}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
 
-      {/* ➕ NEW FILES */}
-      <input
-        type="file"
-        multiple
-        {...register('files')}
-        accept=".png,.jpg,.jpeg,.svg"
-      />
+        {/* ➕ NEW FILES */}
+        <input
+          type="file"
+          multiple
+          {...register('files')}
+          accept=".png,.jpg,.jpeg,.svg"
+        />
 
-      <button disabled={loading}>
-        {loading ? 'Сохраняем...' : 'Сохранить'}
-      </button>
+        <button disabled={loading}>
+          {loading ? 'Сохраняем...' : 'Сохранить'}
+        </button>
 
-      {success && <p>{success}</p>}
-    </form>
+        {success && <p>{success}</p>}
+      </form>
+    </div>
   )
 }

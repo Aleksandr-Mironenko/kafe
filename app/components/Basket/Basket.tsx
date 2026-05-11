@@ -61,17 +61,18 @@ type CartItem = Dish & { quantity: number }
 //   agree: yup.boolean().required("Согласие обязательно").oneOf([true], "Согласие обязательно"),
 // })
 
-const Basket = () => {
+const Basket = ({ what }: { what?: string }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [delivery, setDelivery] = useState<boolean>(false)
   const [address, setAddress] = useState<string>('')
   const [ls, setLs] = useState<CartItem[]>([])
 
   const priceDelivery = 350
-
+  const storageKey = what ?? "cart"
+  const cartUpdated = what ? `cartUpdated-${what}` : "cartUpdated"
 
   const getCard = () => {
-    const stored = localStorage.getItem("cart")
+    const stored = localStorage.getItem(storageKey)
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
     setLs(cart)
   }
@@ -83,16 +84,16 @@ const Basket = () => {
 
   useEffect(() => {
     const sync = () => {
-      const stored = localStorage.getItem("cart")
+      const stored = localStorage.getItem(storageKey)
       setLs(stored ? JSON.parse(stored) : [])
     }
 
     // внутри вкладки
-    window.addEventListener("cartUpdated", sync)
+    window.addEventListener(cartUpdated, sync)
 
     // между вкладками
     const storageHandler = (e: StorageEvent) => {
-      if (e.key === "cart") {
+      if (e.key === storageKey) {
         sync()
       }
     }
@@ -100,15 +101,15 @@ const Basket = () => {
     window.addEventListener("storage", storageHandler)
 
     return () => {
-      window.removeEventListener("cartUpdated", sync)
+      window.removeEventListener(cartUpdated, sync)
       window.removeEventListener("storage", storageHandler)
     }
   }, [])
 
 
   const updateCart = (updated: CartItem[]) => {
-    localStorage.setItem("cart", JSON.stringify(updated))
-    window.dispatchEvent(new Event("cartUpdated"))
+    localStorage.setItem(storageKey, JSON.stringify(updated))
+    window.dispatchEvent(new Event(cartUpdated))
     setLs(updated)
   }
 
@@ -166,23 +167,23 @@ const Basket = () => {
         <div style={{ padding: "20px", borderRadius: "8px", height: "90px", display: "flex", alignItems: "center" }}>
           {!delivery && (
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <p>Адрес кафе </p>
+              <p><strong>Адрес кафе </strong></p>
               <p>г.Бор, ул. Неклюдово, д.1</p>
             </div>
           )}
           {delivery && (
 
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <label htmlFor="address">Адрес доставки:</label>
+              <label htmlFor="address"><strong>Адрес доставки:</strong></label>
               <input onChange={(e) => changeAddress(e.target.value)} style={{ width: "100%", border: "1px solid black", padding: "10px", borderRadius: "5px" }} autoComplete="address-line1" id="address" type="text" placeholder="Улица, дом, квартира" />
             </div>
 
           )}
         </div>
-        <div style={{ margin: "0 0 20px", padding: "20px", }}
+        <div style={{ margin: "0 0 20px", padding: "0 20px", }}
         >
-          <h3>Корзина</h3>
-          {ls.length < 1 ? <p>Пока что пусто...</p> :
+          <h3 style={{ textAlign: "center" }}><strong style={{ fontSize: "20px" }}>Корзина</strong></h3>
+          {ls.length < 1 ? <div><p>Пока что пусто...</p>{what && <> <p>Выберите что-то из</p><p>меню услуги</p></>}</div> :
             ls.map(el => (
               <li key={el.id} style={{ margin: "15px 0", display: "flex", flexDirection: "row" }}>
                 <Image src={el.image_url || pagefood} alt={el.name} className={styles.dishImage} width={80} height={80} />
@@ -197,11 +198,11 @@ const Basket = () => {
                     justifyContent: 'center',
 
                   }}>
-                    < ButtonDel dish={el} updateCart={updateCart} ls={ls} />
+                    < ButtonDel what={what} dish={el} updateCart={updateCart} ls={ls} />
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', fontSize: '15px' }}>
                       {el.quantity}
                     </div>
-                    < ButtonAdd dish={el} updateCart={updateCart} marker={"+"} />
+                    < ButtonAdd what={what} dish={el} updateCart={updateCart} marker={"+"} />
                   </div>
                 </div>
               </li>

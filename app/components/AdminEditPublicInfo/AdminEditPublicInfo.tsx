@@ -139,7 +139,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "city"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -160,7 +160,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "address_url"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -180,7 +180,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "phone"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -201,7 +201,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "schedule"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -222,7 +222,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "title"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -242,7 +242,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "content"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -263,7 +263,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "delivery_payment_title"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -284,7 +284,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "delivery_payment_content"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>
@@ -305,7 +305,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "url_link"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
               `</div>
@@ -326,7 +326,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
                 >
                   {loadingField === "image"
                     ? <span className={styles.loader}></span>
-                    : <span className={styles.iconSave}>💾</span>}
+                    : <span className={styles.iconSave}>Сохранить</span>}
                 </button>
               </div>
             </div>

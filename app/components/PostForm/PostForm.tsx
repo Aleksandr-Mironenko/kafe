@@ -69,42 +69,44 @@ export default function PostForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <h2 style={{ textAlign: "center" }}><strong>Создаем статью</strong></h2>
+        <div>
+          <label className={styles.label}>Название</label>
+          <input type="text" {...register('name')} className={styles.input} />
+          <p className={styles.error}>{errors.name?.message}</p>
+        </div>
 
-      <div>
-        <label className={styles.label}>Название</label>
-        <input type="text" {...register('name')} className={styles.input} />
-        <p className={styles.error}>{errors.name?.message}</p>
-      </div>
+        <div>
+          <label className={styles.label}>Заголовок</label>
+          <textarea {...register('header')} className={styles.textarea} />
+          <p className={styles.error}>{errors.header?.message}</p>
+        </div>
 
-      <div>
-        <label className={styles.label}>Заголовок</label>
-        <textarea {...register('header')} className={styles.textarea} />
-        <p className={styles.error}>{errors.header?.message}</p>
-      </div>
+        <div>
+          <label className={styles.label}>Полное описание</label>
+          <textarea {...register('full_description')} className={styles.textarea} />
+          <p className={styles.error}>{errors.full_description?.message}</p>
+        </div>
 
-      <div>
-        <label className={styles.label}>Полное описание</label>
-        <textarea {...register('full_description')} className={styles.textarea} />
-        <p className={styles.error}>{errors.full_description?.message}</p>
-      </div>
+        <div>
+          <label className={styles.label}>Порядок сортировки</label>
+          <input type="number" {...register('sort_order')} className={styles.input} />
+          <p className={styles.error}>{errors.sort_order?.message}</p>
+        </div>
 
-      <div>
-        <label className={styles.label}>Порядок сортировки</label>
-        <input type="number" {...register('sort_order')} className={styles.input} />
-        <p className={styles.error}>{errors.sort_order?.message}</p>
-      </div>
+        <label className={styles.toggleSwitch}>
+          <input type="checkbox" {...register('is_available')} />
+          <span className={styles.slider}></span>
+        </label>
 
-      <label className={styles.toggleSwitch}>
-        <input type="checkbox" {...register('is_available')} />
-        <span className={styles.slider}></span>
-      </label>
+        <button type="submit" disabled={loading} className={styles.button}>
+          {loading ? 'Создание...' : 'Создать статью'}
+        </button>
 
-      <button type="submit" disabled={loading} className={styles.button}>
-        {loading ? 'Создание...' : 'Создать пост'}
-      </button>
-
-      {success && <p className={styles.success}>{success}</p>}
-    </form>
+        {success && <p className={styles.success}>{success}</p>}
+      </form>
+    </div>
   )
 }

@@ -13,6 +13,7 @@ import 'swiper/css/pagination'
 import ButtonAdd from '../ButtonAdd/ButtonAdd'
 import ButtonDel from '../ButtonDel/ButtonDel'
 import { useEffect, useRef, useState } from 'react'
+import Basket from '../Basket/Basket'
 // import { useEffect, useState } from 'react'
 
 type Service = {
@@ -64,18 +65,11 @@ type CartItem = Dish & { quantity: number }
 
 export default function ServiseUserPage({ services, menu, dishes }: { services: Service, menu: Menu[], dishes: Dish[] }) {
 
-  const router = useRouter()
-
-
   const [ls, setLs] = useState<CartItem[]>([])
 
-  const [scrollState, setScrollState] = useState<
-    Record<string, { left: boolean; right: boolean }>
-  >({})
 
-  const scrollRefs = useRef<Record<string, HTMLUListElement | null>>({}); const STEP = 222;
   const getCard = () => {
-    const stored = localStorage.getItem("cart")
+    const stored = localStorage.getItem(services.url_name)
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
     setLs(cart)
   }
@@ -87,16 +81,16 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
 
   useEffect(() => {
     const sync = () => {
-      const stored = localStorage.getItem("cart")
+      const stored = localStorage.getItem(services.url_name)
       setLs(stored ? JSON.parse(stored) : [])
     }
 
     // внутри вкладки
-    window.addEventListener("cartUpdated", sync)
+    window.addEventListener(`cartUpdated-${services.url_name}`, sync)
 
     // между вкладками
     const storageHandler = (e: StorageEvent) => {
-      if (e.key === "cart") {
+      if (e.key === services.url_name) {
         sync()
       }
     }
@@ -104,10 +98,69 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
     window.addEventListener("storage", storageHandler)
 
     return () => {
-      window.removeEventListener("cartUpdated", sync)
+      window.removeEventListener(`cartUpdated-${services.url_name}`, sync)
       window.removeEventListener("storage", storageHandler)
     }
   }, [])
+
+
+  const updateCart = (updated: CartItem[]) => {
+    localStorage.setItem(services.url_name, JSON.stringify(updated))
+    window.dispatchEvent(new Event(`cartUpdated-${services.url_name}`))
+    setLs(updated)
+  }
+
+
+
+
+
+
+
+  //-------------------------
+  const router = useRouter()
+
+
+  // const [ls, setLs] = useState<CartItem[]>([])
+
+  const [scrollState, setScrollState] = useState<
+    Record<string, { left: boolean; right: boolean }>
+  >({})
+
+  const scrollRefs = useRef<Record<string, HTMLUListElement | null>>({}); const STEP = 222;
+  // const getCard = () => {
+  //   const stored = localStorage.getItem("cart")
+  //   const cart: CartItem[] = stored ? JSON.parse(stored) : []
+  //   setLs(cart)
+  // }
+
+  // useEffect(() => {
+  //   getCard()
+
+  // }, [])
+
+  // useEffect(() => {
+  //   const sync = () => {
+  //     const stored = localStorage.getItem("cart")
+  //     setLs(stored ? JSON.parse(stored) : [])
+  //   }
+
+  //   // внутри вкладки
+  //   window.addEventListener("cartUpdated", sync)
+
+  //   // между вкладками
+  //   const storageHandler = (e: StorageEvent) => {
+  //     if (e.key === "cart") {
+  //       sync()
+  //     }
+  //   }
+
+  //   window.addEventListener("storage", storageHandler)
+
+  //   return () => {
+  //     window.removeEventListener("cartUpdated", sync)
+  //     window.removeEventListener("storage", storageHandler)
+  //   }
+  // }, [])
 
   const checkScroll = (id: string) => {
     const el = scrollRefs.current[id]
@@ -140,11 +193,11 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
 
 
 
-  const updateCart = (updated: CartItem[]) => {
-    localStorage.setItem("cart", JSON.stringify(updated))
-    window.dispatchEvent(new Event("cartUpdated"))
-    setLs(updated)
-  }
+  // const updateCart = (updated: CartItem[]) => {
+  //   localStorage.setItem("cart", JSON.stringify(updated))
+  //   window.dispatchEvent(new Event("cartUpdated"))
+  //   setLs(updated)
+  // }
 
   const scrollLeft = (id: string) => {
     const el = scrollRefs.current[id]
@@ -190,65 +243,66 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
 
         return (
           <li className={styles.card} key={dish.id}>
+            <Link href={`/dish/${dish.url_name}`} >
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
+                  {dish.image_url &&
+                    // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
+                    <Image
+                      // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
+                      className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
+                      fill
+                      src={dish.image_url}
+                      alt={dish.name} />
+                    // </div>
+                  }
+                  {quantity !== 0 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -60%)",
+                        width: "60px",
+                        height: "60px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "50%",
+                        background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
+                        color: "black",
+                        fontWeight: 700,
+                        fontSize: "40px"
+                      }}
+                    >
+                      {ls.find(el => el.id === dish.id)?.quantity || ""}
+                    </div>
+                  )}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
-                {dish.image_url &&
-                  // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
-                  <Image
-                    // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-                    className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
-                    fill
-                    src={dish.image_url}
-                    alt={dish.name} />
-                  // </div>
-                }
-                {quantity !== 0 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -60%)",
-                      width: "60px",
-                      height: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
-                      color: "black",
-                      fontWeight: 700,
-                      fontSize: "40px"
-                    }}
-                  >
-                    {ls.find(el => el.id === dish.id)?.quantity || ""}
-                  </div>
-                )}
+                </div>
+                <p className={styles.dish__name}>{dish.name}</p>
 
-              </div>
-              <p className={styles.dish__name}>{dish.name}</p>
+                <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
+                  <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
+                  <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
 
-              <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
-                <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
-                <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
+                </div>
 
-              </div>
-
-            </div >
+              </div >
+            </Link>
             <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
               {quantity !== 0 ?
                 <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>
                   {quantity !== 0 &&
-                    <ButtonDel dish={dish} ls={ls} updateCart={updateCart} />
+                    <ButtonDel what={services.url_name} dish={dish} ls={ls} updateCart={updateCart} />
                   }
                   <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price} ₽</p>
-                  <ButtonAdd dish={dish} updateCart={updateCart} marker={"+"} />
+                  <ButtonAdd what={services.url_name} dish={dish} updateCart={updateCart} marker={"+"} />
                 </div>
                 :
                 <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price}  ₽</p>
               }
-              {quantity === 0 && <ButtonAdd dish={dish} updateCart={updateCart} marker={"Добавить"} />}
+              {quantity === 0 && <ButtonAdd what={services.url_name} dish={dish} updateCart={updateCart} marker={"Добавить"} />}
             </div>
           </li >
         )
@@ -307,7 +361,11 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
     return () => clearTimeout(timeout)
   }, [menu, dishes])
 
-
+  const handleScroll = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const el = document.querySelector("#send");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
 
   return (
@@ -376,13 +434,12 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
       <div className={styles.content}>
         <div className={styles.topBlock}>
           <p className={styles.topBlock_text}>{services.description}</p>
-          <button className={styles.cta}>Заказать сейчас →</button>
+
+
+          <button onClick={handleScroll} className={styles.cta}>Заказать сейчас →</button>
         </div>
 
-        <div className={styles.section}>
-          <h2 style={{ fontSize: "25px" }}><strong>Подробнее о услуге </strong></h2>
-          <p style={{ fontSize: "23px" }}>{services.full_description}</p>
-        </div>
+
 
         {/* <div className={styles.infoGrid}>
           <div>⏱ 20–30 мин</div>
@@ -401,6 +458,20 @@ export default function ServiseUserPage({ services, menu, dishes }: { services: 
           <ul style={{ listStyleType: "none", display: "flex", gap: "10px", flexDirection: "column" }}>
             {ddd}
           </ul>
+          <div id="send" style={{ marginTop: "30px", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+            <div className={styles.section}>
+              <h2 style={{ fontSize: "25px" }}><strong>Подробнее о услуге </strong></h2>
+              <p style={{ fontSize: "23px" }}>{services.full_description}</p>
+            </div>
+            <aside className={styles.basket_Aside}  >
+              <Basket what={services.url_name} />
+            </aside>
+          </div>
+
+
+          {/* <aside className={styles.main__basket_Aside}  >
+            <Basket />
+          </aside> */}
         </div>
 
         {/* FEATURES */}

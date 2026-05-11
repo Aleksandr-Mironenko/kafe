@@ -8,6 +8,7 @@ import Image from "next/image"
 // import ButtonDelete from "../ButtonDelete/ButtonDelete";
 import { useState, useEffect } from "react";
 import styles from "./ContentMenuDishes.module.scss"
+import Link from "next/link";
 type Menu = {
   url_name: string;
   id: string;
@@ -99,52 +100,53 @@ const ContentOneMenuDishes = ({ menu, dishes }: { menu: Menu[], dishes: Dish[] }
 
         return (
           <li className={styles.card} key={dish.id}>
+            <Link href={`/dish/${dish.url_name}`} >
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
+                  {dish.image_url &&
+                    // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
+                    <Image
+                      // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
+                      className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
+                      fill
+                      src={dish.image_url}
+                      alt={dish.name} />
+                    // </div>
+                  }
+                  {quantity !== 0 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -60%)",
+                        width: "60px",
+                        height: "60px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "50%",
+                        background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
+                        color: "black",
+                        fontWeight: 700,
+                        fontSize: "40px"
+                      }}
+                    >
+                      {ls.find(el => el.id === dish.id)?.quantity || ""}
+                    </div>
+                  )}
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
-                {dish.image_url &&
-                  // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
-                  <Image
-                    // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-                    className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
-                    fill
-                    src={dish.image_url}
-                    alt={dish.name} />
-                  // </div>
-                }
-                {quantity !== 0 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -60%)",
-                      width: "60px",
-                      height: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
-                      color: "black",
-                      fontWeight: 700,
-                      fontSize: "40px"
-                    }}
-                  >
-                    {ls.find(el => el.id === dish.id)?.quantity || ""}
-                  </div>
-                )}
+                </div>
+                <p className={styles.dish__name} >{dish.name}</p>
 
-              </div>
-              <p className={styles.dish__name} >{dish.name}</p>
+                <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
+                  <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
+                  <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
 
-              <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
-                <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
-                <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
+                </div>
 
-              </div>
-
-            </div >
+              </div >
+            </Link>
             <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
               {quantity !== 0 ?
                 <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>

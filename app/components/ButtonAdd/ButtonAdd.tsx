@@ -1,3 +1,4 @@
+import { string } from 'zod'
 import styles from './ButtonAdd.module.scss'
 export type Dish = {
   id: string
@@ -16,9 +17,13 @@ export type Dish = {
 }
 type CartItem = Dish & { quantity: number }
 
-const ButtonAdd = ({ dish, updateCart, marker }: { dish: Dish, updateCart: (updated: CartItem[]) => void, marker: string }) => {
+const ButtonAdd = ({ dish, updateCart, marker, what }: { dish: Dish, updateCart: (updated: CartItem[]) => void, marker: string, what?: string }) => {
+  const storageKey = what ?? "cart"
+  const cartUpdated = what ? `cartUpdated-${what}` : "cartUpdated"
+
+
   const addToCart = () => {
-    const stored = localStorage.getItem("cart")
+    const stored = localStorage.getItem(what ?? "cart")
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
 
     const exists = cart.find(item => item.id === dish.id)
@@ -32,6 +37,7 @@ const ButtonAdd = ({ dish, updateCart, marker }: { dish: Dish, updateCart: (upda
       : [...cart, { ...dish, quantity: 1 }]
 
     updateCart(updated)
+    window.dispatchEvent(new Event(cartUpdated))
   }
 
   return (

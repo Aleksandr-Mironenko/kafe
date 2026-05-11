@@ -88,34 +88,36 @@ export default function PostFormEdit({ postId, initialData }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <h2 style={{ textAlign: "center" }}><strong>Редактируем статьи</strong></h2>
+        <label>Название</label>
+        <input {...register('name')} />
+        <p className={styles.error}>{errors.name?.message}</p>
 
-      <label>Название</label>
-      <input {...register('name')} />
-      <p className={styles.error}>{errors.name?.message}</p>
+        <label>Заголовок</label>
+        <textarea {...register('header')} />
+        <p className={styles.error}>{errors.header?.message}</p>
 
-      <label>Заголовок</label>
-      <textarea {...register('header')} />
-      <p className={styles.error}>{errors.header?.message}</p>
+        <label>Полное описание</label>
+        <textarea {...register('full_description')} />
+        <p className={styles.error}>{errors.full_description?.message}</p>
 
-      <label>Полное описание</label>
-      <textarea {...register('full_description')} />
-      <p className={styles.error}>{errors.full_description?.message}</p>
+        <label>Порядок сортировки</label>
+        <input type="number" {...register('sort_order')} />
+        <p className={styles.error}>{errors.sort_order?.message}</p>
 
-      <label>Порядок сортировки</label>
-      <input type="number" {...register('sort_order')} />
-      <p className={styles.error}>{errors.sort_order?.message}</p>
+        <label className={styles.checkbox}>
+          <input type="checkbox" {...register('is_available')} />
+          Активен
+        </label>
 
-      <label className={styles.checkbox}>
-        <input type="checkbox" {...register('is_available')} />
-        Активен
-      </label>
+        <button disabled={loading}>
+          {loading ? 'Сохраняем...' : 'Сохранить'}
+        </button>
 
-      <button disabled={loading}>
-        {loading ? 'Сохраняем...' : 'Сохранить'}
-      </button>
-
-      {success && <p className={styles.success}>{success}</p>}
-    </form>
+        {success && <p className={styles.success}>{success}</p>}
+      </form>
+    </div>
   )
 }

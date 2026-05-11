@@ -99,7 +99,7 @@ const AdminPage = ({ menu, services, reviews, posts, publicInfo }: { menu: Menu[
           onClick={() => setOpen('posts')}
           className={styles.createButton}
         >
-          Редактировать посты
+          Редактировать статьи
         </button>
 
         <button

@@ -5,6 +5,7 @@
   min-height: 100%;
   margin: 20px auto;
   border-radius: 20px;
+  min-width: 626px;
 }
 
 .header {
@@ -208,12 +209,13 @@
 }
 
 .iconSave {
-  font-size: 45px
+  font-size: 15px
 }
 
 .saveButton {
+  margin-left: 10px;
   height: 38px;
-  width: 40px;
+  width: 80px;
   border-radius: 8px;
   border: none;
   background: rgba(0, 0, 0, 0.1);

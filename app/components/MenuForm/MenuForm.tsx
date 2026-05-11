@@ -78,40 +78,45 @@ export default function MenuForm(
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <div>
-        <label className={styles.label}>Название</label>
-        <input type="text" {...register('name')} className={styles.input} />
-        <p className={styles.error}>{errors.name?.message}</p>
-      </div>
 
-      <div>
-        <label className={styles.label}>Описание</label>
-        <textarea {...register('description')} className={styles.textarea} />
-        <p className={styles.error}>{errors.description?.message}</p>
-      </div>
 
-      <label className={styles.toggleSwitch}>
-        <input type="checkbox" {...register('is_available')} />
-        <span className={styles.slider}></span>
-      </label>
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <div>
+          <h2 style={{ textAlign: "center" }}><strong>Создаем меню</strong></h2>
+          <label className={styles.label}>Название</label>
+          <input type="text" {...register('name')} className={styles.input} />
+          <p className={styles.error}>{errors.name?.message}</p>
+        </div>
 
-      <div>
-        <label className={styles.label}>Изображение</label>
-        <input
-          type="file"
-          {...register('imageFile')}
-          accept=".svg,.png,.jpeg,.jpg"
-          className={styles.fileInput}
-        />
-        <p className={styles.error}>{errors.imageFile?.message}</p>
-      </div>
+        <div>
+          <label className={styles.label}>Описание</label>
+          <textarea {...register('description')} className={styles.textarea} />
+          <p className={styles.error}>{errors.description?.message}</p>
+        </div>
 
-      <button type="submit" disabled={loading} className={styles.button}>
-        {loading ? 'Создание...' : 'Создать меню'}
-      </button>
+        <label className={styles.toggleSwitch}>
+          <input type="checkbox" {...register('is_available')} />
+          <span className={styles.slider}></span>
+        </label>
 
-      {success && <p className={styles.success}>{success}</p>}
-    </form>
+        <div>
+          <label className={styles.label}>Изображение</label>
+          <input
+            type="file"
+            {...register('imageFile')}
+            accept=".svg,.png,.jpeg,.jpg"
+            className={styles.fileInput}
+          />
+          <p className={styles.error}>{errors.imageFile?.message}</p>
+        </div>
+
+        <button type="submit" disabled={loading} className={styles.button}>
+          {loading ? 'Создание...' : 'Создать меню'}
+        </button>
+
+        {success && <p className={styles.success}>{success}</p>}
+      </form>
+    </div>
   )
 }

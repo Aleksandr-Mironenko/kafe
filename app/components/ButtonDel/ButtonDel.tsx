@@ -17,11 +17,13 @@ export type Dish = {
 }
 type CartItem = Dish & { quantity: number }
 
-const ButtonDel = ({ dish, ls, updateCart }: { dish: Dish, ls: CartItem[], updateCart: (updated: CartItem[]) => void }) => {
+const ButtonDel = ({ dish, ls, updateCart, what }: { dish: Dish, ls: CartItem[], updateCart: (updated: CartItem[]) => void, what?: string }) => {
+  const storageKey = what ?? "cart"
+  const cartUpdated = what ? `cartUpdated-${what}` : "cartUpdated"
 
 
   const removeFromCart = () => {
-    const stored = localStorage.getItem("cart")
+    const stored = localStorage.getItem(storageKey)
     const cart: CartItem[] = stored ? JSON.parse(stored) : []
 
     const exists = cart.find(item => item.id === dish.id)
@@ -36,6 +38,7 @@ const ButtonDel = ({ dish, ls, updateCart }: { dish: Dish, ls: CartItem[], updat
         .filter(el => el.quantity > 0)
 
     updateCart(updated)
+    window.dispatchEvent(new Event(cartUpdated))
   }
   const item = ls.find(i => i.id === dish.id)
   const quantity = item?.quantity ?? 0

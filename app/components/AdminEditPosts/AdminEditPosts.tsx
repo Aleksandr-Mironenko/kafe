@@ -22,10 +22,10 @@ const AdminEditPosts = ({ posts }: { posts: Post[] }) => {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Посты</h2>
+          <h2 className={styles.title}>Статьи</h2>
 
           <Link href={`/admin/posts/create`} className={styles.createButton}>
-            + Создать пост
+            + Создать статью
           </Link>
         </div>
 
@@ -46,7 +46,7 @@ const AdminEditPosts = ({ posts }: { posts: Post[] }) => {
 
                 {/* EDIT */}
                 <Link
-                  href={`/admin/posts/${post.id}/edit`}
+                  href={`/admin/posts/${post.url_name}/edit`}
                   className={`${styles.actionButton} ${styles.edit}`}
                 >
                   ✏️
