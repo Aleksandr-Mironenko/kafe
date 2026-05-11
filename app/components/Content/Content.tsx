@@ -21,7 +21,7 @@ export type Dish = {
   name: string
   ingredients: string
   short_description?: string
-  full_description?: string
+  full_description: string
   weight?: string
   price: number
   image_url?: string
