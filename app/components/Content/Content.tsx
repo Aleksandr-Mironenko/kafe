@@ -1,89 +1,102 @@
-import { getMenus } from "@/services/menuServise"
-import { getDishes } from "@/services/dishService"
-import ContentInfoBlock from "../ContentInfoBlock/ContentInfoBlock"
-import ContentOneMenuDishes from "../ContentOneMenuDishes/ContentOneMenuDishes"
-import ContentMenuDishes from "@/app/components/ContentMenuDishes/ContentMenuDishes"
-import styles from "./Content.module.scss"
-import Basket from "../Basket/Basket"
+import { getMenus } from '@/services/menuServise'
+import { getDishes } from '@/services/dishService'
+import ContentInfoBlock from '../ContentInfoBlock/ContentInfoBlock'
+import ContentOneMenuDishes from '../ContentOneMenuDishes/ContentOneMenuDishes'
+import ContentMenuDishes from '@/app/components/ContentMenuDishes/ContentMenuDishes'
+import styles from './Content.module.scss'
+import Basket from '../Basket/Basket'
 type Menu = {
-  url_name: string;
-  id: string;
-  name: string;
-  description: string | null;
-  image_url: string | null;
-  created_at: string | null;
-  is_available: boolean
-  slugs: string[]
+    url_name: string
+    id: string
+    name: string
+    description: string | null
+    image_url: string | null
+    created_at: string | null
+    is_available: boolean
+    slugs: string[]
 }
 export type Dish = {
-  id: string
-  menu_id: string
-  name: string
-  ingredients: string
-  short_description?: string
-  full_description: string
-  weight?: string
-  price: number
-  image_url?: string
-  order_index?: number
-  is_available?: boolean
-  url_name: string
-  slugs: string[]
+    id: string
+    menu_id: string
+    name: string
+    ingredients: string
+    short_description?: string
+    full_description: string
+    weight?: string
+    price: number
+    image_url?: string
+    order_index?: number
+    is_available?: boolean
+    url_name: string
+    slugs: string[]
 }
 
 interface PublicInfo {
-  id: string,
-  city: string,
-  address_url: string,
-  phone: string,
-  schedule: string,
-  title: string,
-  content: string,
-  image_url: string,
-  url_link: string,
-  updated_at: string,
-  delivery_payment_title: string,
-  delivery_payment_content: string
+    id: string
+    city: string
+    address_url: string
+    phone: string
+    schedule: string
+    title: string
+    content: string
+    image_url: string
+    url_link: string
+    updated_at: string
+    delivery_payment_title: string
+    delivery_payment_content: string
 }
 
-export default async function Content({ dishProps, menuProps, publicInfo }: { publicInfo: PublicInfo, dishProps?: Dish[], menuProps?: Menu }) {
-  console.log(dishProps)
-  let menu: Menu[] = []
-  if (menuProps === undefined) {
-    menu = await getMenus()
-  } else {
-    menu = [menuProps]
-  }
-  let dishes: Dish[] = []
-
-  if (dishProps === undefined) {
-    for (const el of menu) {
-      const elDishes = await getDishes(el.id)
-      dishes.push(...elDishes)
+export default async function Content({
+    dishProps,
+    menuProps,
+    publicInfo,
+}: {
+    publicInfo: PublicInfo
+    dishProps?: Dish[]
+    menuProps?: Menu
+}) {
+    console.log(dishProps)
+    let menu: Menu[] = []
+    if (menuProps === undefined) {
+        menu = await getMenus()
+    } else {
+        menu = [menuProps]
     }
-  } else {
-    dishes = [...dishes, ...dishProps]
-  }
-  return <div className={dishProps !== undefined ? styles.content : styles.content1}>
-    {(dishProps === undefined) && (<>
+    let dishes: Dish[] = []
 
-      <ContentInfoBlock publicInfo={publicInfo} />
+    if (dishProps === undefined) {
+        for (const el of menu) {
+            const elDishes = await getDishes(el.id)
+            dishes.push(...elDishes)
+        }
+    } else {
+        dishes = [...dishes, ...dishProps]
+    }
+    return (
+        <div
+            className={
+                dishProps !== undefined ? styles.content : styles.content1
+            }
+        >
+            {dishProps === undefined && (
+                <>
+                    {/* <ContentInfoBlock publicInfo={publicInfo} /> */}
 
-
-      <ContentMenuDishes menu={menu} dishes={dishes} />
-    </>
-
-
+                    <ContentMenuDishes menu={menu} dishes={dishes} />
+                </>
+            )}
+            {dishProps && (
+                <div
+                    style={{
+                        alignSelf: 'center',
+                        flex: 1,
+                        minWidth: 0,
+                        width: '100%',
+                    }}
+                >
+                    <ContentOneMenuDishes menu={menu} dishes={dishes} />
+                </div>
+            )}
+        </div>
     )
-    }
-    {
-      dishProps && <div style={{ alignSelf: "center", }}>
-        <ContentOneMenuDishes menu={menu} dishes={dishes} />
-      </div>
-    }
-  </div >
 }
-
-
-
-

@@ -103,7 +103,7 @@ const AdminEditPosts = ({ publicInfo }: { publicInfo: PublicInfo }) => {
         setImageUrl(data.image_url);
       }
 
-      // ⏳ задержка
+      // задержка
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
     } finally {

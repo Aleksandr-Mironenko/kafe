@@ -1,40 +1,41 @@
-"use client"
+'use client'
 import {
-  useState, useEffect, useCallback,
-  //  SetStateAction 
-} from "react"
-import styles from "./Basket.module.scss"
+    useState,
+    useEffect,
+    useCallback,
+    //  SetStateAction
+} from 'react'
+import styles from './Basket.module.scss'
 // import { useForm, useWatch } from "react-hook-form";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import * as yup from "yup";
 import Image from 'next/image'
 import pagefood from '../../../public/food-dish-svgrepo-com.svg'
-import ButtonAdd from "../ButtonAdd/ButtonAdd";
-import ButtonDel from "../ButtonDel/ButtonDel";
-import BasketModal from "../BasketModal/BasketModal";
+import ButtonAdd from '../ButtonAdd/ButtonAdd'
+import ButtonDel from '../ButtonDel/ButtonDel'
+import BasketModal from '../BasketModal/BasketModal'
 
 export type Dish = {
-  id: string
-  menu_id: string
-  name: string
-  ingredients: string
-  short_description?: string
-  full_description: string
-  weight?: string
-  price: number
-  image_url?: string
-  order_index?: number
-  is_available?: boolean
-  slugs: string[]
-  url_name: string
+    id: string
+    menu_id: string
+    name: string
+    ingredients: string
+    short_description?: string
+    full_description: string
+    weight?: string
+    price: number
+    image_url?: string
+    order_index?: number
+    is_available?: boolean
+    slugs: string[]
+    url_name: string
 }
 
-
 export type FormValues = {
-  name: string
-  phone: string
-  email: string
-  agree: boolean
+    name: string
+    phone: string
+    email: string
+    agree: boolean
 }
 
 type CartItem = Dish & { quantity: number }
@@ -62,181 +63,261 @@ type CartItem = Dish & { quantity: number }
 // })
 
 const Basket = ({ what }: { what?: string }) => {
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [delivery, setDelivery] = useState<boolean>(false)
-  const [address, setAddress] = useState<string>('')
-  const [ls, setLs] = useState<CartItem[]>([])
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [delivery, setDelivery] = useState<boolean>(false)
+    const [address, setAddress] = useState<string>('')
+    const [ls, setLs] = useState<CartItem[]>([])
 
-  const priceDelivery = 350
-  const storageKey = what ?? "cart"
-  const cartUpdated = what ? `cartUpdated-${what}` : "cartUpdated"
+    const priceDelivery = 350
+    const storageKey = what ?? 'cart'
+    const cartUpdated = what ? `cartUpdated-${what}` : 'cartUpdated'
 
-  const getCard = () => {
-    const stored = localStorage.getItem(storageKey)
-    const cart: CartItem[] = stored ? JSON.parse(stored) : []
-    setLs(cart)
-  }
-
-  useEffect(() => {
-    getCard()
-
-  }, [])
-
-  useEffect(() => {
-    const sync = () => {
-      const stored = localStorage.getItem(storageKey)
-      setLs(stored ? JSON.parse(stored) : [])
+    const getCard = () => {
+        const stored = localStorage.getItem(storageKey)
+        const cart: CartItem[] = stored ? JSON.parse(stored) : []
+        setLs(cart)
     }
 
-    // внутри вкладки
-    window.addEventListener(cartUpdated, sync)
+    useEffect(() => {
+        getCard()
+    }, [])
 
-    // между вкладками
-    const storageHandler = (e: StorageEvent) => {
-      if (e.key === storageKey) {
-        sync()
-      }
+    useEffect(() => {
+        const sync = () => {
+            const stored = localStorage.getItem(storageKey)
+            setLs(stored ? JSON.parse(stored) : [])
+        }
+
+        // внутри вкладки
+        window.addEventListener(cartUpdated, sync)
+
+        // между вкладками
+        const storageHandler = (e: StorageEvent) => {
+            if (e.key === storageKey) {
+                sync()
+            }
+        }
+
+        window.addEventListener('storage', storageHandler)
+
+        return () => {
+            window.removeEventListener(cartUpdated, sync)
+            window.removeEventListener('storage', storageHandler)
+        }
+    }, [])
+
+    const updateCart = (updated: CartItem[]) => {
+        localStorage.setItem(storageKey, JSON.stringify(updated))
+        window.dispatchEvent(new Event(cartUpdated))
+        setLs(updated)
     }
 
-    window.addEventListener("storage", storageHandler)
+    const fullprice = ls.reduce((acc, el) => {
+        return acc + el.price * el.quantity
+    }, 0)
 
-    return () => {
-      window.removeEventListener(cartUpdated, sync)
-      window.removeEventListener("storage", storageHandler)
+    const service = delivery ? priceDelivery : 0
+
+    const closeModal = useCallback(() => {
+        setModalOpen(false)
+    }, [])
+
+    const changeAddress = (value: string) => {
+        setAddress(value)
+        localStorage.setItem('address', value)
+        window.dispatchEvent(new Event('addressUpdated'))
     }
-  }, [])
+    const changeLs = (value: CartItem[]) => {
+        setLs(value)
+    }
 
+    const changeDelivery = useCallback((value: boolean) => {
+        setDelivery(value)
+    }, [])
 
-  const updateCart = (updated: CartItem[]) => {
-    localStorage.setItem(storageKey, JSON.stringify(updated))
-    window.dispatchEvent(new Event(cartUpdated))
-    setLs(updated)
-  }
+    useEffect(() => {
+        localStorage.setItem('address', address)
+    }, [address])
 
-
-
-
-
-  const fullprice = ls.reduce((acc, el) => {
-    return acc + el.price * el.quantity;
-  }, 0);
-
-  const service = delivery ? priceDelivery : 0
-
-
-  const closeModal = useCallback(() => {
-    setModalOpen(false);
-  }, []);
-
-
-  const changeAddress = (value: string) => {
-    setAddress(value)
-    localStorage.setItem("address", value)
-    window.dispatchEvent(new Event("addressUpdated"))
-  }
-  const changeLs = (value: CartItem[]) => {
-    setLs(value)
-  }
-
-
-  const changeDelivery = useCallback((value: boolean) => {
-    setDelivery(value);
-  }, []);
-
-
-
-
-
-  useEffect(() => {
-    localStorage.setItem("address", address)
-  }, [address])
-
-
-
-
-
-
-  return (
-    <div className={styles.basket} >
-      <div className={styles.delivery}  >
-        <button className={`${delivery ? styles.buttonActive : styles.button}`} onClick={() => setDelivery(false)}>Самовывоз</button>
-        <button className={`${delivery ? styles.button : styles.buttonActive}`} onClick={() => setDelivery(true)}>Доставка</button>
-      </div>
-
-      <section style={{ boxShadow: " 0 0 15px rgba(0, 0, 0, 0.6)", margin: "10px 0", borderRadius: "8px", border: "1px solid transparent", backgroundColor: "rgb(236, 235, 230)" }}>
-        <div style={{ padding: "20px", borderRadius: "8px", height: "90px", display: "flex", alignItems: "center" }}>
-          {!delivery && (
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <p><strong>Адрес кафе </strong></p>
-              <p>г.Бор, ул. Неклюдово, д.1</p>
-            </div>
-          )}
-          {delivery && (
-
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <label htmlFor="address"><strong>Адрес доставки:</strong></label>
-              <input onChange={(e) => changeAddress(e.target.value)} style={{ width: "100%", border: "1px solid black", padding: "10px", borderRadius: "5px" }} autoComplete="address-line1" id="address" type="text" placeholder="Улица, дом, квартира" />
+    return (
+        <div className={styles.basket}>
+            <div className={styles.delivery}>
+                <button
+                    className={`${delivery ? styles.buttonActive : styles.button}`}
+                    onClick={() => setDelivery(false)}
+                >
+                    Самовывоз
+                </button>
+                <button
+                    className={`${delivery ? styles.button : styles.buttonActive}`}
+                    onClick={() => setDelivery(true)}
+                >
+                    Доставка
+                </button>
             </div>
 
-          )}
-        </div>
-        <div style={{ margin: "0 0 20px", padding: "0 20px", }}
-        >
-          <h3 style={{ textAlign: "center" }}><strong style={{ fontSize: "20px" }}>Корзина</strong></h3>
-          {ls.length < 1 ? <div><p>Пока что пусто...</p>{what && <> <p>Выберите что-то из</p><p>меню услуги</p></>}</div> :
-            ls.map(el => (
-              <li key={el.id} style={{ margin: "15px 0", display: "flex", flexDirection: "row" }}>
-                <Image src={el.image_url || pagefood} alt={el.name} className={styles.dishImage} width={80} height={80} />
-                <div style={{ padding: " 5px  0 5px 10px" }}>
-                  <p>{el.name}</p>
-                  <p>Итого:  {el.price * el.quantity} ₽</p>
-                  <div style={{
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-
-                  }}>
-                    < ButtonDel what={what} dish={el} updateCart={updateCart} ls={ls} />
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', fontSize: '15px' }}>
-                      {el.quantity}
-                    </div>
-                    < ButtonAdd what={what} dish={el} updateCart={updateCart} marker={"+"} />
-                  </div>
+            <section
+                style={{
+                    boxShadow: ' 0 0 15px rgba(0, 0, 0, 0.6)',
+                    margin: '10px 0',
+                    borderRadius: '8px',
+                    border: '1px solid transparent',
+                    backgroundColor: 'rgb(236, 235, 230)',
+                }}
+            >
+                <div
+                    style={{
+                        padding: '20px',
+                        borderRadius: '8px',
+                        height: '90px',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    {!delivery && (
+                        <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                            <p>
+                                <strong>Адрес кафе </strong>
+                            </p>
+                            <p>г.Бор, ул. Неклюдово, д.1</p>
+                        </div>
+                    )}
+                    {delivery && (
+                        <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                            <label htmlFor="address">
+                                <strong>Адрес доставки:</strong>
+                            </label>
+                            <input
+                                onChange={(e) => changeAddress(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    border: '1px solid black',
+                                    padding: '10px',
+                                    borderRadius: '5px',
+                                }}
+                                autoComplete="address-line1"
+                                id="address"
+                                type="text"
+                                placeholder="Улица, дом, квартира"
+                            />
+                        </div>
+                    )}
                 </div>
-              </li>
+                <div style={{ margin: '0 0 20px', padding: '0 20px' }}>
+                    <h3 style={{ textAlign: 'center' }}>
+                        <strong style={{ fontSize: '20px' }}>Корзина</strong>
+                    </h3>
+                    {ls.length < 1 ? (
+                        <div>
+                            <p>Пока что пусто...</p>
+                            {what && (
+                                <>
+                                    {' '}
+                                    <p>Выберите что-то из</p>
+                                    <p>меню услуги</p>
+                                </>
+                            )}
+                        </div>
+                    ) : (
+                        ls.map((el) => (
+                            <li
+                                key={el.id}
+                                style={{
+                                    margin: '15px 0',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <Image
+                                    src={el.image_url || pagefood}
+                                    alt={el.name}
+                                    className={styles.dishImage}
+                                    width={80}
+                                    height={80}
+                                />
+                                <div style={{ padding: ' 5px  0 5px 10px' }}>
+                                    <p>{el.name}</p>
+                                    <p>Итого: {el.price * el.quantity} ₽</p>
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <ButtonDel
+                                            what={what}
+                                            dish={el}
+                                            updateCart={updateCart}
+                                            ls={ls}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                width: '40px',
+                                                fontSize: '15px',
+                                            }}
+                                        >
+                                            {el.quantity}
+                                        </div>
+                                        <ButtonAdd
+                                            what={what}
+                                            dish={el}
+                                            updateCart={updateCart}
+                                            marker={'+'}
+                                        />
+                                    </div>
+                                </div>
+                            </li>
+                        ))
+                    )}
+                    {/* список из lokal storage */}
+                    <div
+                        style={{
+                            border: '1px solid gray',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            margin: '20px 0',
+                        }}
+                    >
+                        <p>Детали заказа:</p>
+                        <p>Товаров на сумму: {fullprice} ₽</p>
+                        <p>Услуг на сумму: {service} ₽</p>
+                        <p>Итого: {fullprice + service} ₽</p>
+                    </div>
+                    <button
+                        onClick={() => setModalOpen(true)}
+                        className={styles.sendOrder}
+                    >
+                        <div> Оформить заказ </div>
+                    </button>
+                </div>
+            </section>
 
-            ))
-          }
-          {/* список из lokal storage */}
-          <div style={{ border: "1px solid gray", borderRadius: "8px", padding: "10px", margin: "20px 0" }}>
-            <p>Детали заказа:</p>
-            <p>Товаров на сумму: {fullprice} ₽</p>
-            <p>Услуг на сумму: {service} ₽</p>
-            <p>Итого: {fullprice + service} ₽</p>
-          </div>
-          <button onClick={() => setModalOpen(true)} className={styles.sendOrder}>
-            <div> Оформить заказ </div>
-          </button>
-
+            <BasketModal
+                isService={storageKey}
+                modalOpen={modalOpen}
+                onClose={closeModal}
+                address={address}
+                changeAddress={changeAddress}
+                ls={ls}
+                changeLs={changeLs}
+                priceDelivery={priceDelivery}
+                fullprice={fullprice}
+                service={service}
+                summ={fullprice + service}
+                delivery={delivery}
+                changeDelivery={changeDelivery}
+            />
         </div>
-      </section >
-
-      <BasketModal modalOpen={modalOpen}
-        onClose={closeModal}
-        address={address}
-        changeAddress={changeAddress}
-        ls={ls}
-        changeLs={changeLs}
-        priceDelivery={priceDelivery}
-        fullprice={fullprice}
-        service={service}
-        summ={fullprice + service}
-        delivery={delivery}
-        changeDelivery={changeDelivery}
-      />
-    </div >
-  )
+    )
 }
-export default Basket 
+export default Basket

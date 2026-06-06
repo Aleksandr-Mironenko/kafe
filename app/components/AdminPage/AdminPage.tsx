@@ -1,5 +1,4 @@
-
-"use client"
+'use client'
 import Image from 'next/image'
 import pagefood from '../../../public/food-dish-svgrepo-com.svg'
 import Link from 'next/link'
@@ -17,113 +16,122 @@ import AdminEditPublicInfo from '../AdminEditPublicInfo/AdminEditPublicInfo'
 import LogoutButton from '../LogoutButton/LogoutButton'
 
 interface Menu {
-  url_name: string
-  id: string
-  name: string
-  description: string | null
-  image_url: string | null
-  created_at: string | null
-  is_available: boolean
+    url_name: string
+    id: string
+    name: string
+    description: string | null
+    image_url: string | null
+    created_at: string | null
+    is_available: boolean
 }
 
 interface Service {
-  id: number
-  name: string
-  description: string
-  full_description: string
-  is_available: boolean
-  created_at: string | null
-  url_name: string
-  images: string[]
+    id: number
+    name: string
+    description: string
+    full_description: string
+    is_available: boolean
+    created_at: string | null
+    url_name: string
+    images: string[]
 }
 interface Review {
-  id: string;
-  image_url: string;
-  created_at: string;
+    id: string
+    image_url: string
+    created_at: string
 }
 export interface Post {
-  id: string
-  name: string
-  header: string
-  full_description: string
-  sort_order: number
-  is_available: boolean
-  created_at: string
-  url_name: string
+    id: string
+    name: string
+    header: string
+    full_description: string
+    sort_order: number
+    is_available: boolean
+    created_at: string
+    url_name: string
 }
 interface PublicInfo {
-  id: string,
-  city: string,
-  address_url: string,
-  phone: string,
-  schedule: string,
-  title: string,
-  content: string,
-  image_url: string,
-  url_link: string,
-  updated_at: string,
-  delivery_payment_title: string,
-  delivery_payment_content: string
+    id: string
+    city: string
+    address_url: string
+    phone: string
+    schedule: string
+    title: string
+    content: string
+    image_url: string
+    url_link: string
+    updated_at: string
+    delivery_payment_title: string
+    delivery_payment_content: string
 }
 
+const AdminPage = ({
+    menu,
+    services,
+    reviews,
+    posts,
+    publicInfo,
+}: {
+    menu: Menu[]
+    services: Service[]
+    reviews: Review[]
+    posts: Post[]
+    publicInfo: PublicInfo
+}) => {
+    const [open, setOpen] = useState<
+        'menu' | 'services' | 'reviews' | 'posts' | 'publicInfo' | null
+    >('publicInfo')
+    return (
+        <>
+            <div className={styles.wrapper}>
+                <button
+                    onClick={() => setOpen('menu')}
+                    className={styles.createButton}
+                >
+                    Редактировать меню
+                </button>
+                <button
+                    onClick={() => setOpen('services')}
+                    className={styles.createButton}
+                >
+                    Редактировать услуги
+                </button>
 
-const AdminPage = ({ menu, services, reviews, posts, publicInfo }: { menu: Menu[], services: Service[], reviews: Review[], posts: Post[], publicInfo: PublicInfo }) => {
-  const [open, setOpen] = useState<'menu' | 'services' | 'reviews' | 'posts' | 'publicInfo' | null>("publicInfo")
-  return (
-    <>
+                <button
+                    onClick={() => setOpen('reviews')}
+                    className={styles.createButton}
+                >
+                    Редактировать отзывы
+                </button>
 
+                <button
+                    onClick={() => setOpen('posts')}
+                    className={styles.createButton}
+                >
+                    Редактировать статьи
+                </button>
 
-      <div className={styles.wrapper}>
-        <button
-          onClick={() => setOpen('menu')}
-          className={styles.createButton}
-        >
-          Редактировать меню
-        </button>
+                <button
+                    onClick={() => setOpen('publicInfo')}
+                    className={styles.createButton}
+                >
+                    Редактировать публичную информацию
+                </button>
 
-        <button
-          onClick={() => setOpen('services')}
-          className={styles.createButton}
-        >
-          Редактировать услуги
-        </button>
+                <div className={styles.logout}>
+                    <LogoutButton />
+                </div>
+            </div>
 
-        <button
-          onClick={() => setOpen('reviews')}
-          className={styles.createButton}
-        >
-          Редактировать отзывы
-        </button>
-
-        <button
-          onClick={() => setOpen('posts')}
-          className={styles.createButton}
-        >
-          Редактировать статьи
-        </button>
-
-        <button
-          onClick={() => setOpen('publicInfo')}
-          className={styles.createButton}
-        >
-          Редактировать публичную информацию
-        </button>
-
-        <div className={styles.logout}>
-          <LogoutButton />
-        </div>
-      </div>
-
-
-
-      {open === 'menu' && < AdminEditMenu menu={menu} />}
-      {open === 'services' && < AdminEditServices services={services} />}
-      {open === 'reviews' && < AdminEditReviews reviews={reviews} />}
-      {open === 'posts' && < AdminEditPosts posts={posts} />}
-      {open === 'publicInfo' && < AdminEditPublicInfo publicInfo={publicInfo} />}
-    </>
-  )
+            {open === 'menu' && <AdminEditMenu menu={menu} />}
+            {open === 'services' && <AdminEditServices services={services} />}
+            {open === 'reviews' && <AdminEditReviews reviews={reviews} />}
+            {open === 'posts' && <AdminEditPosts posts={posts} />}
+            {open === 'publicInfo' && (
+                <AdminEditPublicInfo publicInfo={publicInfo} />
+            )}
+        </>
+    )
 }
-
 
 export default AdminPage

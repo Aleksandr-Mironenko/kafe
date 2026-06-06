@@ -1,156 +1,148 @@
-
-
 // 👉 тебе нужно:
 
 // Завести карточку в Яндекс Бизнес
 // Привязать к этому же адресу и телефону
 // Добавить сайт
 
-
-
 import styles from './pageStyles.module.scss'
-import Header from '@/app/components/Header/Header';
-import Footer from '@/app/components/Footer/Footer';
-import Menus from '@/app/components/Menus/Menus';
-import Basket from '@/app/components/Basket/Basket';
+import Header from '@/app/components/Header/Header'
+import Footer from '@/app/components/Footer/Footer'
+import Menus from '@/app/components/Menus/Menus'
+import Basket from '@/app/components/Basket/Basket'
 
-import { getReviews } from '@/services/reviewsServise';
-import ReviewPage from '../components/ReviewPage/ReviewPage';
-import { getPublicInfo } from '@/services/publicInfoServise';
+import { getReviews } from '@/services/reviewsServise'
+import ReviewPage from '../components/ReviewPage/ReviewPage'
+import { getPublicInfo } from '@/services/publicInfoServise'
 
-export const dynamic = "force-dynamic"
-
+export const dynamic = 'force-dynamic'
 
 type Review = {
-  id: string;
-  image_url: string;
-  created_at: string;
+    id: string
+    image_url: string
+    created_at: string
 }
 export default async function MenuPagesClient() {
+    const reviews: Review[] = await getReviews() // получу все отзывы и передам на отображение
 
+    const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const publicInfo = await getPublicInfo()
+    return (
+        <>
+            {/* Local Business */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'FoodEstablishment',
+                        name: 'Кафе и услуги питания в Бору',
+                        url: BASE_URL,
+                        areaServed: 'Бор, Нижегородская область',
+                        address: {
+                            '@type': 'PostalAddress',
+                            streetAddress: 'ул. Неклюдово, 1',
+                            addressLocality: 'Бор',
+                            addressRegion: 'Нижегородская область',
+                            addressCountry: 'RU',
+                        },
+                        geo: {
+                            '@type': 'GeoCoordinates',
+                            latitude: 56.404115,
+                            longitude: 44.006722,
+                        },
+                        servesCuisine: 'Русская кухня',
+                        openingHours: 'Mo-Su 09:00-20:00',
+                        priceRange: '₽₽',
+                        description:
+                            'Кафе, кейтеринг и организация питания в городе Бор: банкеты, поминки, корпоративное питание',
+                        telephone: '+7-961-638-50-60',
+                        email: 'n.tranceva@mail.ru',
+                    }),
+                }}
+            />
+            {/* Legal Organization */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'Organization',
+                        name: 'ИП Транцева Наталья Алексеевна',
+                    }),
+                }}
+            />
+            {/* WebSite + SearchAction */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'WebSite',
+                        url: BASE_URL,
+                        potentialAction: {
+                            '@type': 'SearchAction',
+                            target: `${BASE_URL}/search?q={search_term_string}`,
+                            'query-input': 'required name=search_term_string',
+                        },
+                    }),
+                }}
+            />
 
+            {/* Breadcrumbs */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'BreadcrumbList',
+                        itemListElement: [
+                            {
+                                '@type': 'ListItem',
+                                position: 1,
+                                name: 'Главная',
+                                item: `${BASE_URL}/`,
+                            },
+                        ],
+                    }),
+                }}
+            />
 
+            <main
+                style={{
+                    minHeight: '100vh',
+                    margin: '0 auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <Header publicInfo={publicInfo} />
 
+                <h1 aria-hidden="false" className={styles.visuallyHidden}>
+                    Кафе и услуги питания в Бору — кейтеринг, банкеты,
+                    корпоративное питание
+                </h1>
 
-  const reviews: Review[] = await getReviews() // получу все отзывы и передам на отображение
+                <section>
+                    <h2 className={styles.visuallyHidden}>
+                        Организация питания: кафе, выездное обслуживание и
+                        питание для организаций
+                    </h2>
+                    <p className={styles.visuallyHidden}>
+                        ИП Транцева Наталья Алексеевна оказывает услуги
+                        общественного питания...
+                    </p>
+                </section>
 
+                <div className={styles.content}>
+                    <h2 className={styles.title}>Отзывы о нас</h2>
 
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const publicInfo = await getPublicInfo()
-  return (
-    <>
-      {/* Local Business */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FoodEstablishment",
-            name: "Кафе и услуги питания в Бору",
-            url: BASE_URL,
-            areaServed: "Бор, Нижегородская область",
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: "ул. Неклюдово, 1",
-              addressLocality: "Бор",
-              addressRegion: "Нижегородская область",
-              addressCountry: "RU",
-            },
-            geo: {
-              "@type": "GeoCoordinates",
-              latitude: 56.404115,
-              longitude: 44.006722,
-            },
-            servesCuisine: "Русская кухня",
-            openingHours: "Mo-Su 09:00-20:00",
-            priceRange: "₽₽",
-            description:
-              "Кафе, кейтеринг и организация питания в городе Бор: банкеты, поминки, корпоративное питание",
-            telephone: "+7-961-638-50-60",
-            email: "n.tranceva@mail.ru",
-          }),
-        }}
-      />
-      {/* Legal Organization */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "ИП Транцева Наталья Алексеевна",
-          }),
-        }}
-      />
-      {/* WebSite + SearchAction */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            url: BASE_URL,
-            potentialAction: {
-              "@type": "SearchAction",
-              target: `${BASE_URL}/search?q={search_term_string}`,
-              "query-input": "required name=search_term_string",
-            },
-          }),
-        }}
-      />
+                    <ReviewPage reviews={reviews} />
+                </div>
 
-      {/* Breadcrumbs */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Главная",
-                item: `${BASE_URL}/`,
-              },
-            ],
-          }),
-        }}
-      />
-
-      <main
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Header publicInfo={publicInfo} />
-
-        <h1 aria-hidden="false" className={styles.visuallyHidden}>
-          Кафе и услуги питания в Бору — кейтеринг, банкеты, корпоративное питание
-        </h1>
-
-        <section>
-          <h2 className={styles.visuallyHidden}>
-            Организация питания: кафе, выездное обслуживание и питание для организаций
-          </h2>
-          <p className={styles.visuallyHidden}>
-            ИП Транцева Наталья Алексеевна оказывает услуги общественного питания...
-          </p>
-        </section>
-
-
-        <div className={styles.content}>
-          <h2 className={styles.title}>Отзывы о нас</h2>
-
-          <ReviewPage reviews={reviews} />
-        </div>
-
-        <Footer />
-      </main>
-    </>
-  );
+                <Footer />
+            </main>
+        </>
+    )
 }
 // ✅ Что нужно сделать (обязательно)
 // 🔹 1. Добавить сайт в поисковики
@@ -196,9 +188,6 @@ export default async function MenuPagesClient() {
 // бор фуд
 // bor-food доставка
 
-
-
-
 // максимальная ширина 1950
 //ширина основного блока примерно 55- 60%
 //слева 15-17%
@@ -210,10 +199,6 @@ export default async function MenuPagesClient() {
 // справа корзина 2 состояния доставка и самовывоз
 // туда с локального хранилища - вопрос как рассчитывать
 // переход к оформлению - заполнение формы
-
-
-
-
 
 //  async function translate(text, from = "en", to = "ru") {
 //   const res = await fetch("https://api.mymemory.translated.net/get?q="

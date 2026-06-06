@@ -151,7 +151,7 @@
 
 import { supabase } from '@/lib/supabaseClient';
 import { sendEmail } from "@/app/api/lib/email/sendEmail"
-import { sendSMS } from "@/app/api/lib/sms-message/sendSms";
+// import { sendSMS } from "@/app/api/lib/sms-message/sendSms";
 import retry from '@/app/api/lib/retry/retry';
 import { cookies } from "next/headers";
 
@@ -299,14 +299,13 @@ export async function POST(req: Request) {
       ),
 
       //отправка смс клиенту 
-      // sendSMS(resolvedPhone,
-      sendSMS(correctPhone,
-        `Ваш код подтверждения: ${code} `,
-      )
+      // не работает по требованиям РКН 
 
-      // sendSMS(`${client === "sender" ? phoneFrom : phoneWhere} `,
-      // `${orderNumbers && `Номер вашего заказа: ${JSON.stringify(orderNumbers?.orderId)}`}
-      //   ${sms.messageUserSMS} `),
+      // sendSMS(correctPhone,
+      //   `Ваш код подтверждения: ${code} `,
+      // )
+
+
     )
     const results = await Promise.allSettled(tasks)
 
