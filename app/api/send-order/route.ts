@@ -34,7 +34,7 @@ export async function POST(req: Request) {
             isService,
         } = await fabric(formData)
 
-        const mapping = {
+        const mapping: Record<string, string> = {
             shch: 'щ',
             ch: 'ч',
             sh: 'ш',
