@@ -68,10 +68,10 @@ const BasketModal = ({
     changeAddress,
     ls,
     changeLs,
-    // priceDelivery,
-    // fullprice,
-    // service,
-    // summ,
+    priceDelivery,
+    fullprice,
+    service,
+    summ,
     delivery,
     changeDelivery,
     isService,
@@ -82,10 +82,10 @@ const BasketModal = ({
     changeAddress: (e: string) => void
     ls: CartItem[]
     changeLs: (value: CartItem[]) => void
-    // priceDelivery: number
-    // fullprice: number
-    // service: number
-    // summ: number
+    priceDelivery: number
+    fullprice: number
+    service: number
+    summ: number
     delivery: boolean
     changeDelivery: (value: boolean) => void
     isService: string
