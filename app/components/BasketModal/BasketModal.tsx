@@ -34,7 +34,7 @@ type CartItem = Dish & { quantity: number }
 
 const schema = yup.object({
     name: yup.string().required('Имя обязательно'),
-    comment: yup.string(),
+    comment: yup.string().default(''),
     phone: yup
         .string()
         .required('Телефон обязателен')
@@ -362,6 +362,7 @@ const BasketModal = ({
             name: parsed.name,
             phone: parsed.phone,
             email: parsed.email,
+            comment: '',
             agree: false,
             agreeRec: false,
         })
