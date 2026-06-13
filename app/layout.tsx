@@ -64,8 +64,22 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="ru">
-            <body className={inter.className}>
+        <html
+            lang="ru"
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
+            <body
+                className={inter.className}
+                style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
                 {/* Cafe Schema */}
                 <script
                     type="application/ld+json"
