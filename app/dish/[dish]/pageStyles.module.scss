@@ -21,13 +21,14 @@ body {
     justify-content: space-between;
     gap: 10px;
     max-width: 1500px;
-    margin: 0 auto;
+    margin: 0 auto 20px;
     min-width: 626px;
 
     &__content {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: start;
         gap: 10px;
         max-width: 1500px;
         margin: 0 auto;

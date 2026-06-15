@@ -1,151 +1,136 @@
-"use client"
+'use client'
 
-import Image from "next/image"
-import { useEffect, useState } from "react"
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
-import ButtonAdd from "../ButtonAdd/ButtonAdd"
-import ButtonDel from "../ButtonDel/ButtonDel"
+import ButtonAdd from '../ButtonAdd/ButtonAdd'
+import ButtonDel from '../ButtonDel/ButtonDel'
 
-import styles from "./DishPageClient.module.scss"
+import styles from './DishPageClient.module.scss'
 
 type Dish = {
-  id: string
-  name: string
-  url_name: string
-  ingredients: string
-  short_description?: string
-  weight?: string
-  price: number
-  image_url?: string
-  slugs: string[]
-  menu_id: string
-  full_description: string
+    id: string
+    name: string
+    url_name: string
+    ingredients: string
+    short_description?: string
+    weight?: string
+    price: number
+    image_url?: string
+    slugs: string[]
+    menu_id: string
+    full_description: string
 }
 
 type CartItem = Dish & { quantity: number }
 
-export default function DishCard({
-  dishInfo
-}: {
-  dishInfo: Dish
-}) {
-  const [ls, setLs] = useState<CartItem[]>([])
+export default function DishCard({ dishInfo }: { dishInfo: Dish }) {
+    const [ls, setLs] = useState<CartItem[]>([])
 
-  useEffect(() => {
-    const stored = localStorage.getItem("cart")
-    const cart = stored ? JSON.parse(stored) : []
-    setLs(cart)
-  }, [])
+    useEffect(() => {
+        const stored = localStorage.getItem('cart')
+        const cart = stored ? JSON.parse(stored) : []
+        setLs(cart)
+    }, [])
 
-  const updateCart = (updated: CartItem[]) => {
-    localStorage.setItem("cart", JSON.stringify(updated))
-    window.dispatchEvent(new Event("cartUpdated"))
-    setLs(updated)
-  }
-  useEffect(() => {
-    const sync = () => {
-      const stored = localStorage.getItem("cart")
-      setLs(stored ? JSON.parse(stored) : [])
+    const updateCart = (updated: CartItem[]) => {
+        localStorage.setItem('cart', JSON.stringify(updated))
+        window.dispatchEvent(new Event('cartUpdated'))
+        setLs(updated)
     }
+    useEffect(() => {
+        const sync = () => {
+            const stored = localStorage.getItem('cart')
+            setLs(stored ? JSON.parse(stored) : [])
+        }
 
-    // внутри вкладки
-    window.addEventListener("cartUpdated", sync)
+        // внутри вкладки
+        window.addEventListener('cartUpdated', sync)
 
-    // между вкладками
-    const storageHandler = (e: StorageEvent) => {
-      if (e.key === "cart") {
-        sync()
-      }
-    }
-
-    window.addEventListener("storage", storageHandler)
-
-    return () => {
-      window.removeEventListener("cartUpdated", sync)
-      window.removeEventListener("storage", storageHandler)
-    }
-  }, [])
-  const quantity =
-    ls.find(el => el.id === dishInfo.id)?.quantity || 0
-
-  return (
-    <article className={styles.card}>
-
-      {/* IMAGE */}
-      <div className={styles.imageWrapper}>
-        {dishInfo.image_url && (
-          <Image
-            src={dishInfo.image_url}
-            alt={dishInfo.name}
-            fill
-            className={
-              quantity > 0
-                ? styles.imageDisabled
-                : styles.image
+        // между вкладками
+        const storageHandler = (e: StorageEvent) => {
+            if (e.key === 'cart') {
+                sync()
             }
-          />
-        )}
+        }
 
-        {quantity > 0 && (
-          <div className={styles.quantity}>
-            {quantity}
-          </div>
-        )}
-      </div>
+        window.addEventListener('storage', storageHandler)
 
-      {/* CONTENT */}
-      <div className={styles.info}>
+        return () => {
+            window.removeEventListener('cartUpdated', sync)
+            window.removeEventListener('storage', storageHandler)
+        }
+    }, [])
+    const quantity = ls.find((el) => el.id === dishInfo.id)?.quantity || 0
 
-        <h3 className={styles.name}>
-          {dishInfo.name}
-        </h3>
+    return (
+        <article className={styles.card}>
+            {/* IMAGE */}
+            <div className={styles.imageWrapper}>
+                {dishInfo.image_url && (
+                    <Image
+                        src={dishInfo.image_url}
+                        alt={dishInfo.name}
+                        fill
+                        className={
+                            quantity > 0 ? styles.imageDisabled : styles.image
+                        }
+                    />
+                )}
 
-        <p className={styles.desc}>
-          {dishInfo.full_description}
-        </p>
+                {quantity > 0 && (
+                    <div className={styles.quantity}>{quantity}</div>
+                )}
+            </div>
 
-        <p className={styles.desc}>
-          <b>Ингридиенты: </b>
-        </p>
-        <p className={styles.desc}>
-          {dishInfo.ingredients}
-        </p>
-        <div className={styles.meta}>
-          <span>{dishInfo.weight} г</span>
-          <span>{dishInfo.price} ₽</span>
-        </div>
+            {/* CONTENT */}
+            <div className={styles.info}>
+                <h3 className={styles.name}>{dishInfo.name}</h3>
 
-      </div>
+                <p className={styles.desc}>{dishInfo.full_description}</p>
 
-      {/* ACTIONS */}
-      <div className={styles.actions}>
-        {quantity > 0 ? (
-          <div className={styles.counter}>
-            <ButtonDel
-              dish={dishInfo}
-              ls={ls}
-              updateCart={updateCart}
-            />
+                <p className={styles.desc}>
+                    <b>Ингридиенты: </b>
+                </p>
+                <p className={styles.desc}>{dishInfo.ingredients}</p>
+                <div className={styles.meta}>
+                    <span>
+                        <b>Вес: </b>
+                        {dishInfo.weight} г
+                    </span>
+                    <span>
+                        <b>Цена: </b>
+                        {dishInfo.price} ₽
+                    </span>
+                </div>
+            </div>
 
-            <span className={styles.counterValue}>
-              {quantity}
-            </span>
+            {/* ACTIONS */}
+            <div className={styles.actions}>
+                {quantity > 0 ? (
+                    <div className={styles.counter}>
+                        <ButtonDel
+                            dish={dishInfo}
+                            ls={ls}
+                            updateCart={updateCart}
+                        />
 
-            <ButtonAdd
-              dish={dishInfo}
-              updateCart={updateCart}
-              marker="+"
-            />
-          </div>
-        ) : (
-          <ButtonAdd
-            dish={dishInfo}
-            updateCart={updateCart}
-            marker="Добавить"
-          />
-        )}
-      </div>
+                        <span className={styles.counterValue}>{quantity}</span>
 
-    </article>
-  )
+                        <ButtonAdd
+                            dish={dishInfo}
+                            updateCart={updateCart}
+                            marker="+"
+                        />
+                    </div>
+                ) : (
+                    <ButtonAdd
+                        dish={dishInfo}
+                        updateCart={updateCart}
+                        marker="Добавить"
+                    />
+                )}
+            </div>
+        </article>
+    )
 }

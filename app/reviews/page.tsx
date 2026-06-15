@@ -110,7 +110,6 @@ export default async function MenuPagesClient() {
             <main
                 style={{
                     minHeight: '100vh',
-                    margin: '0 auto',
                     display: 'flex',
                     flexDirection: 'column',
                 }}
