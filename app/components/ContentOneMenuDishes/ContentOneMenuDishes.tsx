@@ -320,12 +320,14 @@ const ContentOneMenuDishes = ({
                             style={{
                                 minWidth: '45vw',
                                 maxWidth: '100%',
-                                margin: '20px',
+                                margin: '20px 0',
                             }}
                         >
                             <p style={{ textAlign: 'center' }}>
-                                Нет доступных для заказа блюд (но мы уже
-                                готовим)
+                                Нет доступных для заказа блюд
+                            </p>
+                            <p style={{ textAlign: 'center' }}>
+                                (но мы уже готовим)
                             </p>
                         </div>
                     </div>

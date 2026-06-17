@@ -17,471 +17,574 @@ import Basket from '../Basket/Basket'
 // import { useEffect, useState } from 'react'
 
 type Service = {
-  id: number
-  name: string
-  description: string
-  full_description: string
-  is_available: boolean
-  created_at: string | null
-  url_name: string
-  images: string[]
+    id: number
+    name: string
+    description: string
+    full_description: string
+    is_available: boolean
+    created_at: string | null
+    url_name: string
+    images: string[]
 }
 type Menu = {
-  url_name: string;
-  id: string;
-  name: string;
-  description: string | null;
-  image_url: string | null;
-  created_at: string | null;
-  is_available: boolean
-  slugs: string[]
+    url_name: string
+    id: string
+    name: string
+    description: string | null
+    image_url: string | null
+    created_at: string | null
+    is_available: boolean
+    slugs: string[]
 }
 export type Dish = {
-  id: string
-  menu_id: string
-  name: string
-  ingredients: string
-  short_description?: string
-  full_description: string
-  weight?: string
-  price: number
-  image_url?: string
-  order_index?: number
-  is_available?: boolean
-  slugs: string[]
-  url_name: string
+    id: string
+    menu_id: string
+    name: string
+    ingredients: string
+    short_description?: string
+    full_description: string
+    weight?: string
+    price: number
+    image_url?: string
+    order_index?: number
+    is_available?: boolean
+    slugs: string[]
+    url_name: string
 }
-
-
-
-
-
 
 type CartItem = Dish & { quantity: number }
 
+export default function ServiseUserPage({
+    services,
+    menu,
+    dishes,
+}: {
+    services: Service
+    menu: Menu[]
+    dishes: Dish[]
+}) {
+    const [ls, setLs] = useState<CartItem[]>([])
 
-
-
-
-export default function ServiseUserPage({ services, menu, dishes }: { services: Service, menu: Menu[], dishes: Dish[] }) {
-
-  const [ls, setLs] = useState<CartItem[]>([])
-
-
-  const getCard = () => {
-    const stored = localStorage.getItem(services.url_name)
-    const cart: CartItem[] = stored ? JSON.parse(stored) : []
-    setLs(cart)
-  }
-
-  useEffect(() => {
-    getCard()
-
-  }, [])
-
-  useEffect(() => {
-    const sync = () => {
-      const stored = localStorage.getItem(services.url_name)
-      setLs(stored ? JSON.parse(stored) : [])
+    const getCard = () => {
+        const stored = localStorage.getItem(services.url_name)
+        const cart: CartItem[] = stored ? JSON.parse(stored) : []
+        setLs(cart)
     }
 
-    // внутри вкладки
-    window.addEventListener(`cartUpdated-${services.url_name}`, sync)
+    useEffect(() => {
+        getCard()
+    }, [])
 
-    // между вкладками
-    const storageHandler = (e: StorageEvent) => {
-      if (e.key === services.url_name) {
-        sync()
-      }
+    useEffect(() => {
+        const sync = () => {
+            const stored = localStorage.getItem(services.url_name)
+            setLs(stored ? JSON.parse(stored) : [])
+        }
+
+        // внутри вкладки
+        window.addEventListener(`cartUpdated-${services.url_name}`, sync)
+
+        // между вкладками
+        const storageHandler = (e: StorageEvent) => {
+            if (e.key === services.url_name) {
+                sync()
+            }
+        }
+
+        window.addEventListener('storage', storageHandler)
+
+        return () => {
+            window.removeEventListener(`cartUpdated-${services.url_name}`, sync)
+            window.removeEventListener('storage', storageHandler)
+        }
+    }, [])
+
+    const updateCart = (updated: CartItem[]) => {
+        localStorage.setItem(services.url_name, JSON.stringify(updated))
+        window.dispatchEvent(new Event(`cartUpdated-${services.url_name}`))
+        setLs(updated)
     }
 
-    window.addEventListener("storage", storageHandler)
+    //-------------------------
+    const router = useRouter()
 
-    return () => {
-      window.removeEventListener(`cartUpdated-${services.url_name}`, sync)
-      window.removeEventListener("storage", storageHandler)
-    }
-  }, [])
+    // const [ls, setLs] = useState<CartItem[]>([])
 
+    const [scrollState, setScrollState] = useState<
+        Record<string, { left: boolean; right: boolean }>
+    >({})
 
-  const updateCart = (updated: CartItem[]) => {
-    localStorage.setItem(services.url_name, JSON.stringify(updated))
-    window.dispatchEvent(new Event(`cartUpdated-${services.url_name}`))
-    setLs(updated)
-  }
+    const scrollRefs = useRef<Record<string, HTMLUListElement | null>>({})
+    const STEP = 222
+    // const getCard = () => {
+    //   const stored = localStorage.getItem("cart")
+    //   const cart: CartItem[] = stored ? JSON.parse(stored) : []
+    //   setLs(cart)
+    // }
 
+    // useEffect(() => {
+    //   getCard()
 
+    // }, [])
 
+    // useEffect(() => {
+    //   const sync = () => {
+    //     const stored = localStorage.getItem("cart")
+    //     setLs(stored ? JSON.parse(stored) : [])
+    //   }
 
+    //   // внутри вкладки
+    //   window.addEventListener("cartUpdated", sync)
 
+    //   // между вкладками
+    //   const storageHandler = (e: StorageEvent) => {
+    //     if (e.key === "cart") {
+    //       sync()
+    //     }
+    //   }
 
+    //   window.addEventListener("storage", storageHandler)
 
-  //-------------------------
-  const router = useRouter()
+    //   return () => {
+    //     window.removeEventListener("cartUpdated", sync)
+    //     window.removeEventListener("storage", storageHandler)
+    //   }
+    // }, [])
 
+    const checkScroll = (id: string) => {
+        const el = scrollRefs.current[id]
+        if (!el) return
 
-  // const [ls, setLs] = useState<CartItem[]>([])
+        const left = el.scrollLeft > 0
+        const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 2
 
-  const [scrollState, setScrollState] = useState<
-    Record<string, { left: boolean; right: boolean }>
-  >({})
-
-  const scrollRefs = useRef<Record<string, HTMLUListElement | null>>({}); const STEP = 222;
-  // const getCard = () => {
-  //   const stored = localStorage.getItem("cart")
-  //   const cart: CartItem[] = stored ? JSON.parse(stored) : []
-  //   setLs(cart)
-  // }
-
-  // useEffect(() => {
-  //   getCard()
-
-  // }, [])
-
-  // useEffect(() => {
-  //   const sync = () => {
-  //     const stored = localStorage.getItem("cart")
-  //     setLs(stored ? JSON.parse(stored) : [])
-  //   }
-
-  //   // внутри вкладки
-  //   window.addEventListener("cartUpdated", sync)
-
-  //   // между вкладками
-  //   const storageHandler = (e: StorageEvent) => {
-  //     if (e.key === "cart") {
-  //       sync()
-  //     }
-  //   }
-
-  //   window.addEventListener("storage", storageHandler)
-
-  //   return () => {
-  //     window.removeEventListener("cartUpdated", sync)
-  //     window.removeEventListener("storage", storageHandler)
-  //   }
-  // }, [])
-
-  const checkScroll = (id: string) => {
-    const el = scrollRefs.current[id]
-    if (!el) return
-
-    const left = el.scrollLeft > 0
-    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 2
-
-    setScrollState(prev => ({
-      ...prev,
-      [id]: { left, right }
-    }))
-  }
-
-  const initScroll = (id: string) => { //найти место в меню
-    const el = scrollRefs.current[id]
-    if (!el) return
-
-    const right = el.scrollWidth > el.clientWidth
-
-    setScrollState(prev => ({
-      ...prev,
-      [id]: {
-        left: false,
-        right
-      }
-    }))
-  }
-
-
-
-
-  // const updateCart = (updated: CartItem[]) => {
-  //   localStorage.setItem("cart", JSON.stringify(updated))
-  //   window.dispatchEvent(new Event("cartUpdated"))
-  //   setLs(updated)
-  // }
-
-  const scrollLeft = (id: string) => {
-    const el = scrollRefs.current[id]
-    if (!el) return
-
-    el.scrollBy({ left: -STEP, behavior: 'smooth' })
-    setTimeout(() => checkScroll(id), 150)
-  }
-
-  const scrollRight = (id: string) => {
-    const el = scrollRefs.current[id]
-    if (!el) return
-
-    el.scrollBy({ left: STEP, behavior: 'smooth' })
-    setTimeout(() => checkScroll(id), 150)
-  }
-
-
-
-  const correctText = (el: string, len: number) => {
-
-    return el.slice(0, len - 3) + "..."
-  }
-
-  const dishesByMenu = dishes.reduce((acc, dish) => {
-    if (!acc[dish.menu_id]) {
-      acc[dish.menu_id] = []
+        setScrollState((prev) => ({
+            ...prev,
+            [id]: { left, right },
+        }))
     }
 
-    acc[dish.menu_id].push(dish)
+    const initScroll = (id: string) => {
+        //найти место в меню
+        const el = scrollRefs.current[id]
+        if (!el) return
 
-    return acc
-  }, {} as Record<string, Dish[]>)
+        const right = el.scrollWidth > el.clientWidth
 
+        setScrollState((prev) => ({
+            ...prev,
+            [id]: {
+                left: false,
+                right,
+            },
+        }))
+    }
 
-  const ddd = (menu ?? []).map((el: Menu) => {
-    const filteredDishes = (dishesByMenu[el.id] || []).filter(
-      (dish) => dish.is_available)
+    // const updateCart = (updated: CartItem[]) => {
+    //   localStorage.setItem("cart", JSON.stringify(updated))
+    //   window.dispatchEvent(new Event("cartUpdated"))
+    //   setLs(updated)
+    // }
 
-    const arrDishes =
-      filteredDishes.map((dish: Dish) => {
-        const quantity = ls.find(el => el.id === dish.id)?.quantity || 0
+    const scrollLeft = (id: string) => {
+        const el = scrollRefs.current[id]
+        if (!el) return
+
+        el.scrollBy({ left: -STEP, behavior: 'smooth' })
+        setTimeout(() => checkScroll(id), 150)
+    }
+
+    const scrollRight = (id: string) => {
+        const el = scrollRefs.current[id]
+        if (!el) return
+
+        el.scrollBy({ left: STEP, behavior: 'smooth' })
+        setTimeout(() => checkScroll(id), 150)
+    }
+
+    const correctText = (el: string, len: number) => {
+        return el.slice(0, len - 3) + '...'
+    }
+
+    const dishesByMenu = dishes.reduce(
+        (acc, dish) => {
+            if (!acc[dish.menu_id]) {
+                acc[dish.menu_id] = []
+            }
+
+            acc[dish.menu_id].push(dish)
+
+            return acc
+        },
+        {} as Record<string, Dish[]>,
+    )
+
+    const ddd = (menu ?? []).map((el: Menu) => {
+        const filteredDishes = (dishesByMenu[el.id] || []).filter(
+            (dish) => dish.is_available,
+        )
+
+        const arrDishes = filteredDishes.map((dish: Dish) => {
+            const quantity = ls.find((el) => el.id === dish.id)?.quantity || 0
+
+            return (
+                <li className={styles.card} key={dish.id}>
+                    <Link href={`/dish/${dish.url_name}`}>
+                        <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                            <div
+                                style={{
+                                    width: '100%',
+                                    position: 'relative',
+                                    aspectRatio: '1 / 1',
+                                }}
+                            >
+                                {' '}
+                                {/*картинка со счетчиком */}
+                                {
+                                    dish.image_url && (
+                                        // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
+                                        <Image
+                                            // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
+                                            className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
+                                            fill
+                                            src={dish.image_url}
+                                            alt={dish.name}
+                                        />
+                                    )
+                                    // </div>
+                                }
+                                {quantity !== 0 && (
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -60%)',
+                                            width: '60px',
+                                            height: '60px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '50%',
+                                            background:
+                                                'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)',
+                                            color: 'black',
+                                            fontWeight: 700,
+                                            fontSize: '40px',
+                                        }}
+                                    >
+                                        {ls.find((el) => el.id === dish.id)
+                                            ?.quantity || ''}
+                                    </div>
+                                )}
+                            </div>
+                            <p className={styles.dish__name}>{dish.name}</p>
+
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '60px',
+                                    color: 'rgba(0,0,0,0.6)',
+                                    fontSize: '14px',
+                                    marginTop: '5px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                {' '}
+                                {/*текст ингридиенты, грамовка и тд*/}
+                                <p style={{ wordBreak: 'break-word' }}>
+                                    {correctText(dish.ingredients, 30)}
+                                </p>
+                                <p
+                                    style={{
+                                        textAlign: 'right',
+                                        fontWeight: '700',
+                                    }}
+                                >
+                                    {dish.weight} гр.
+                                </p>
+                            </div>
+                        </div>
+                    </Link>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-around',
+                            marginTop: '10px',
+                        }}
+                    >
+                        {quantity !== 0 ? (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-around',
+                                    width: '70%',
+                                    margin: '0 auto',
+                                }}
+                            >
+                                {quantity !== 0 && (
+                                    <ButtonDel
+                                        what={services.url_name}
+                                        dish={dish}
+                                        ls={ls}
+                                        updateCart={updateCart}
+                                    />
+                                )}
+                                <p
+                                    style={{
+                                        fontWeight: '700',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    {dish.price} ₽
+                                </p>
+                                <ButtonAdd
+                                    what={services.url_name}
+                                    dish={dish}
+                                    updateCart={updateCart}
+                                    marker={'+'}
+                                />
+                            </div>
+                        ) : (
+                            <p
+                                style={{
+                                    fontWeight: '700',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {dish.price} ₽
+                            </p>
+                        )}
+                        {quantity === 0 && (
+                            <ButtonAdd
+                                what={services.url_name}
+                                dish={dish}
+                                updateCart={updateCart}
+                                marker={'Добавить'}
+                            />
+                        )}
+                    </div>
+                </li>
+            )
+        })
 
         return (
-          <li className={styles.card} key={dish.id}>
-            <Link href={`/dish/${dish.url_name}`} >
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>  {/*картинка со счетчиком */}
-                  {dish.image_url &&
-                    // <div style={{ width: "100%", position: "relative", aspectRatio: "1 / 1" }}>
-                    <Image
-                      // style={{ borderRadius: "8px", backgroundColor: "transparent" }}
-                      className={`${quantity !== 0 ? styles.imageselect : styles.image}`}
-                      fill
-                      src={dish.image_url}
-                      alt={dish.name} />
-                    // </div>
-                  }
-                  {quantity !== 0 && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -60%)",
-                        width: "60px",
-                        height: "60px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%)",
-                        color: "black",
-                        fontWeight: 700,
-                        fontSize: "40px"
-                      }}
-                    >
-                      {ls.find(el => el.id === dish.id)?.quantity || ""}
+            arrDishes.length !== 0 &&
+            el.is_available && (
+                <li
+                    style={{
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start ',
+                    }}
+                    key={el.id}
+                >
+                    <h3 className={styles.menuName}>
+                        <strong></strong>
+                        {el.name}
+                    </h3>
+                    {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
+                    <div className={styles.carousel}>
+                        {/* LEFT */}
+                        {scrollState[el.id]?.left && (
+                            <div
+                                onClick={() => scrollLeft(el.id)}
+                                className={`${styles.arrow} ${styles['arrow--left']}`}
+                            >
+                                {'<'}
+                            </div>
+                        )}
+
+                        <div className={styles.viewport}>
+                            <ul
+                                ref={(elRef) => {
+                                    scrollRefs.current[el.id] = elRef
+                                }}
+                                onScroll={() => checkScroll(el.id)}
+                                className={`${styles.noscrollbar} ${styles.list}`}
+                            >
+                                {arrDishes}
+                            </ul>
+                        </div>
+
+                        {/* RIGHT */}
+                        {scrollState[el.id]?.right && (
+                            <div
+                                onClick={() => scrollRight(el.id)}
+                                className={`${styles.arrow} ${styles['arrow--right']}`}
+                            >
+                                {'>'}
+                            </div>
+                        )}
                     </div>
-                  )}
-
-                </div>
-                <p className={styles.dish__name}>{dish.name}</p>
-
-                <div style={{ width: "100%", height: "60px", color: "rgba(0,0,0,0.6)", fontSize: "14px", marginTop: "5px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}> {/*текст ингридиенты, грамовка и тд*/}
-                  <p style={{ wordBreak: "break-word" }}>{correctText(dish.ingredients, 30)}</p>
-                  <p style={{ textAlign: "right", fontWeight: "700" }}>{dish.weight} гр.</p>
-
-                </div>
-
-              </div >
-            </Link>
-            <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-              {quantity !== 0 ?
-                <div style={{ display: "flex", justifyContent: "space-around", width: "70%", margin: "0 auto" }}>
-                  {quantity !== 0 &&
-                    <ButtonDel what={services.url_name} dish={dish} ls={ls} updateCart={updateCart} />
-                  }
-                  <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price} ₽</p>
-                  <ButtonAdd what={services.url_name} dish={dish} updateCart={updateCart} marker={"+"} />
-                </div>
-                :
-                <p style={{ fontWeight: "700", display: "flex", alignItems: "center" }}>{dish.price}  ₽</p>
-              }
-              {quantity === 0 && <ButtonAdd what={services.url_name} dish={dish} updateCart={updateCart} marker={"Добавить"} />}
-            </div>
-          </li >
+                </li>
+            )
         )
-      })
+    })
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            menu.forEach((m) => initScroll(m.id))
+        }, 50)
 
-    return arrDishes.length !== 0 && el.is_available && <li
-      style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start " }} key={el.id}>
-      <h3 className={styles.menuName} ><strong></strong>{el.name}</h3>
-      {/* <div style={{ width: "88%", minWidth: "300px", overflowX: "hidden", margin: "0 auto" }}> */}
-      <div className={styles.carousel}>
+        return () => clearTimeout(timeout)
+    }, [menu, dishes])
 
-        {/* LEFT */}
-        {scrollState[el.id]?.left && (
-          <div
-            onClick={() => scrollLeft(el.id)}
-            className={`${styles.arrow} ${styles['arrow--left']}`}
-          >
-            {'<'}
-          </div>
-        )}
+    const handleScroll = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        const el = document.querySelector('#send')
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }
 
-        <div className={styles.viewport}>
-          <ul
-            ref={(elRef) => {
-              scrollRefs.current[el.id] = elRef
-            }}
-            onScroll={() => checkScroll(el.id)}
-            className={`${styles.noscrollbar} ${styles.list}`}
-          >
-            {arrDishes}
-          </ul>
-        </div>
+    return (
+        <div className={styles.container}>
+            {/* HERO */}
+            <div className={styles.hero}>
+                <Swiper
+                    modules={[Navigation, Pagination]}
+                    navigation
+                    pagination={{ clickable: true }}
+                    className={`${styles.slider} ${styles.swiper}`}
+                    observer={true}
+                    observeParents={true}
+                >
+                    {services.images.map((src, i) => (
+                        <SwiperSlide key={i} className={styles.slide}>
+                            <div className={styles.heroImage}>
+                                <Image
+                                    src={src}
+                                    alt={`slide-${i}`}
+                                    fill
+                                    sizes="100%"
+                                    priority={i === 0}
+                                    className={styles.img}
+                                />
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
 
-        {/* RIGHT */}
-        {scrollState[el.id]?.right && (
-          <div
-            onClick={() => scrollRight(el.id)}
-            className={`${styles.arrow} ${styles['arrow--right']}`}
-          >
-            {'>'}
-          </div>
-        )}
+                <div className={styles.heroOverlay}>
+                    <h1>{services.name}</h1>
 
-      </div>
+                    <div className={styles.meta}>
+                        <span>⏱ 20–30 мин</span>
+                        <span>💰 от €10</span>
+                        <span
+                            className={
+                                services.is_available
+                                    ? styles.available
+                                    : styles.unavailable
+                            }
+                        >
+                            {services.is_available ? 'Доступно' : 'Закрыто'}
+                        </span>
+                    </div>
+                </div>
 
-    </li >
+                <div className={styles.heroActions}>
+                    <Link
+                        href={`/admin/services/${services.url_name}/service/${services.id}/edit`}
+                        className={styles.iconBtn}
+                    >
+                        ✏️
+                    </Link>
 
-  })
+                    <button
+                        className={styles.iconBtn}
+                        onClick={async () => {
+                            if (!confirm(`Удалить "${services.name}"?`)) return
+                            await fetch(`/api/dishes?id=${services.id}`, {
+                                method: 'DELETE',
+                            })
+                            router.refresh()
+                        }}
+                    >
+                        🗑️
+                    </button>
+                </div>
+            </div>
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      menu.forEach(m => initScroll(m.id))
-    }, 50)
+            {/* CONTENT */}
+            <div className={styles.content}>
+                <div className={styles.topBlock}>
+                    <p className={styles.topBlock_text}>
+                        {services.description}
+                    </p>
 
-    return () => clearTimeout(timeout)
-  }, [menu, dishes])
+                    <button onClick={handleScroll} className={styles.cta}>
+                        Заказать сейчас →
+                    </button>
+                </div>
 
-  const handleScroll = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    const el = document.querySelector("#send");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
-
-  return (
-    <div className={styles.container}>
-
-      {/* HERO */}
-      <div className={styles.hero}>
-        <Swiper
-          modules={[Navigation, Pagination]}
-          navigation
-          pagination={{ clickable: true }}
-          className={`${styles.slider} ${styles.swiper}`}
-          observer={true}
-          observeParents={true}
-        >
-          {services.images.map((src, i) => (
-            <SwiperSlide key={i} className={styles.slide}>
-              <div className={styles.heroImage}>
-                <Image
-                  src={src}
-                  alt={`slide-${i}`}
-                  fill
-                  sizes="100%"
-                  priority={i === 0}
-                  className={styles.img}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        <div className={styles.heroOverlay}>
-          <h1>{services.name}</h1>
-
-          <div className={styles.meta}>
-            <span>⏱ 20–30 мин</span>
-            <span>💰 от €10</span>
-            <span className={services.is_available ? styles.available : styles.unavailable}>
-              {services.is_available ? 'Доступно' : 'Закрыто'}
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.heroActions}>
-          <Link
-            href={`/admin/services/${services.url_name}/service/${services.id}/edit`}
-            className={styles.iconBtn}
-          >
-            ✏️
-          </Link>
-
-          <button
-            className={styles.iconBtn}
-            onClick={async () => {
-              if (!confirm(`Удалить "${services.name}"?`)) return
-              await fetch(`/api/dishes?id=${services.id}`, { method: 'DELETE' })
-              router.refresh()
-            }}
-          >
-            🗑️
-          </button>
-        </div>
-      </div>
-
-      {/* CONTENT */}
-      <div className={styles.content}>
-        <div className={styles.topBlock}>
-          <p className={styles.topBlock_text}>{services.description}</p>
-
-
-          <button onClick={handleScroll} className={styles.cta}>Заказать сейчас →</button>
-        </div>
-
-
-
-        {/* <div className={styles.infoGrid}>
+                {/* <div className={styles.infoGrid}>
           <div>⏱ 20–30 мин</div>
           <div>💰 от €10</div>
           <div>🕐 9:00 – 22:00</div>
           <div>🚚 от €15</div>
         </div> */}
 
-        {/* МЕНЮ */}
-        <div className={styles.menuSection}>
-          <div className={styles.menuHeader}>
-            <h2>Меню</h2>
-          </div>
+                {/* МЕНЮ */}
+                <div className={styles.menuSection}>
+                    <div className={styles.menuHeader}>
+                        <h2>Меню</h2>
+                    </div>
 
+                    <ul
+                        style={{
+                            listStyleType: 'none',
+                            display: 'flex',
+                            gap: '10px',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        {ddd}
+                    </ul>
+                    <div
+                        id="send"
+                        style={{
+                            marginTop: '30px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                        }}
+                    >
+                        <div className={styles.section}>
+                            <h2 style={{ fontSize: '25px' }}>
+                                <strong>Подробнее о услуге </strong>
+                            </h2>
+                            <p style={{ fontSize: '23px' }}>
+                                {services.full_description}
+                            </p>
+                        </div>
+                        <aside className={styles.basket_Aside}>
+                            <div style={{ position: 'sticky', top: '15px' }}>
+                                <Basket what={services.url_name} />
+                            </div>
+                        </aside>
+                    </div>
 
-          <ul style={{ listStyleType: "none", display: "flex", gap: "10px", flexDirection: "column" }}>
-            {ddd}
-          </ul>
-          <div id="send" style={{ marginTop: "30px", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-            <div className={styles.section}>
-              <h2 style={{ fontSize: "25px" }}><strong>Подробнее о услуге </strong></h2>
-              <p style={{ fontSize: "23px" }}>{services.full_description}</p>
-            </div>
-            <aside className={styles.basket_Aside}  >
-              <Basket what={services.url_name} />
-            </aside>
-          </div>
-
-
-          {/* <aside className={styles.main__basket_Aside}  >
+                    {/* <aside className={styles.main__basket_Aside}  >
             <Basket />
           </aside> */}
-        </div>
+                </div>
 
-        {/* FEATURES */}
-        {/* <div className={styles.features}>
+                {/* FEATURES */}
+                {/* <div className={styles.features}>
           <div>🌱 Свежие ингредиенты</div>
           <div>🚚 Быстрая доставка</div>
           <div>💳 Удобная оплата</div>
           <div>👨‍🍳 Лучшие повара</div>
         </div> */}
-      </div>
-    </div>
-  )
+            </div>
+        </div>
+    )
 }

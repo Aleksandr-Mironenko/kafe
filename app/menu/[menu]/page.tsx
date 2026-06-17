@@ -189,7 +189,11 @@ export default async function MenuPagesClient({
                                 publicInfo={publicInfo}
                             />
                             <aside className={styles.main__basket_Aside}>
-                                <Basket />
+                                <div
+                                    style={{ position: 'sticky', top: '15px' }}
+                                >
+                                    <Basket />
+                                </div>
                             </aside>
                         </div>
                     </section>

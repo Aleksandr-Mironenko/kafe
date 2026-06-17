@@ -23,7 +23,7 @@ body {
     max-width: 1500px;
     margin: 0 auto;
     min-width: 626px;
-    
+
     &__content {
         display: flex;
         flex-direction: row;
@@ -72,5 +72,6 @@ body {
         width: 20%;
         height: 100%;
         margin-right: 15px;
+        position: relative;
     }
 }
